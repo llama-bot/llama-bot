@@ -27,6 +27,8 @@ class LlamaBotDB:
         if not self.servers_ref.get([]).exists:
             self.servers_ref.set({}, merge=True)
 
+        self.get_bot_settings()
+
     def get_bot_settings(self) -> dict:
         """
         Reads global configuration from database.
@@ -35,7 +37,33 @@ class LlamaBotDB:
         result = self.settings_ref.get().to_dict()
         if not result:
             self.settings_ref.set(
-                {u"clear_emojis": [u"🧹"]},
+                {
+                    u"clear_emojis": [u"🧹"],
+                    u"quotes": [
+                        u"Paul: Caaaaarrrrrlllll!!!!",
+                        u"Carl: And I... I... stabbed him 37 times in the chest!",
+                        u"Carl: Well, I kill people and I eat hands! That's—that's two things!",
+                        u"Carl: That is what forgiveness sounds like, screaming and then silence.",
+                        u"Carl: Probably because I'm a dangerous sociopath with a long history of violence.",
+                        u"Carl: I may have created a crack in space time... through which to collect millions of baby hands.",
+                        u"Carl: Whities gotta pay... and the payment is baby hands.",
+                        u"Paul: CAAAAAAAAARL! WHAT DID YOU DO?",
+                        u"Carl: My stomach was making the rumblies - that only hands could satisfy.",
+                        u"Paul: What is wrong with you, Carl?",
+                        u"Paul: And then you started making out with the ice sculptures.",
+                        u"Carl: I will not apologize for art.",
+                        u"Carl: Well, I'm building a meat dragon and not just any meat will do.",
+                        u"Carl: What's that? It's hard to hear you over the sound of melting city!",
+                        u"Carl: Who's laughing? Clearly not all the people who've just exploded.",
+                        u"Paul: All you do is kill people, Carl!\n"
+                        + "Carl:That's like saying all Mozart did was write songs.",
+                        u"Carl: It's not a meat grinder, it's an orphan stomper.",
+                        u"Carl: Let me explain: Efficiency, industry, never before has this many dead bodies been so manageable.",
+                        u"Carl: I'm the Henry Ford of human meat!",
+                        u"""Paul: It's horrifying, Carl.
+Carl: Thank you.""",
+                    ],
+                },
                 merge=True,
             )
             return self.get_bot_settings()
