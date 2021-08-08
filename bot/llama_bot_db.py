@@ -1,3 +1,4 @@
+from typing import Literal, Union
 import firebase_admin.firestore
 
 from google.cloud.firestore_v1.client import Client
@@ -11,6 +12,16 @@ class LlamaBotDB:
     More information about firestore can be found here:
     https://firebase.google.com/docs/firestore
     """
+
+    # key: discord guild snowflake | value: dictionary: next line
+    # key: channels, messages, roles | value: list of key value pair data
+    vars: dict[
+        int,
+        dict[
+            Union[Literal["channels"], Literal["messages"], Literal["roles"]],
+            dict,
+        ],
+    ] = dict()
 
     def __init__(self, certificate_path):
         cred = firebase_admin.credentials.Certificate(certificate_path)
@@ -28,6 +39,36 @@ class LlamaBotDB:
             self.servers_ref.set({}, merge=True)
 
         self.get_bot_settings()
+
+    def get_vars(
+        self, server_id: int
+    ) -> dict[
+        Union[Literal["channels"], Literal["messages"], Literal["roles"]], list[dict]
+    ]:
+        server_id = int(server_id)
+        self.vars[server_id] = (
+            self.get_server(server_id).document(u"vars").get().to_dict()
+        )
+        return self.vars[server_id]
+
+    def resolve_var(
+        self,
+        server_id: int,
+        data_type: Union[Literal["channels"], Literal["messages"], Literal["roles"]],
+        key,
+    ):
+        if data_type not in ["channels", "messages", "roles"]:
+            raise Exception(
+                "first argument must be either 'channels', 'messages', or 'roles'"
+            )
+
+        server_id = int(server_id)
+        if server_id not in self.vars:
+            self.get_vars(server_id)
+
+        res = self.vars[server_id][data_type][key]
+
+        return res
 
     def get_bot_settings(self) -> dict:
         """
