@@ -11,7 +11,7 @@ class DM(commands.Cog):
 
         self.emojis: set[discord.PartialEmoji] = set()
 
-        for emoji_raw in self.bot.settings["dm"]["emojis"]:
+        for emoji_raw in self.bot.settings["clear_emojis"]:
             self.emojis.add(util.convert_to_partial_emoji(emoji_raw, self.bot))
 
     # block DM commands

@@ -14,7 +14,7 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
 
-        self.quotes: list[str] = self.bot.db.get_bot_settings()["quotes"]
+        self.quotes: list[str] = self.bot.settings["quotes"]
         self.quotes_length = len(self.quotes)
 
         # key: server snowflake, value: index array
@@ -230,7 +230,7 @@ ex:
         help="does the annoying Karen clap. Does not work with external emojis.",
         usage="""> {prefix}{command} Put text to clapify here""",
     )
-    async def clap(self, ctx, arg1, *args):
+    async def clap(self, ctx: Context, arg1, *args):
         # using arg1 to make sure that at least one argument is passed
 
         args = list(args)

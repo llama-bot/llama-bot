@@ -33,6 +33,7 @@ class Llama(commands.Bot):
 
         # create firestore interface
         self.db: LlamaBotDB = LlamaBotDB(firebase_cred_path)
+        self.settings = self.db.get_bot_settings()
 
     # ----- [ DISCORD.PY STUFF ] -----
 
