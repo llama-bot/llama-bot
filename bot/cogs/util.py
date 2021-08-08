@@ -8,6 +8,7 @@ from discord.ext import commands
 class Util(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
+        self.bot.essential_cogs.add("core")
 
     # block DM commands
     async def cog_check(self, ctx: commands.Context):

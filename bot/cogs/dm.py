@@ -8,6 +8,7 @@ from discord.ext import commands
 class DM(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
+        self.bot.essential_cogs.add("core")
 
         self.emojis: set[discord.PartialEmoji] = set()
 

@@ -12,6 +12,7 @@ from datetime import timedelta, datetime
 class Core(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
+        self.bot.essential_cogs.add("core")
 
         # remove any potential existing help command to prevent collision
         self.bot.remove_command("help")

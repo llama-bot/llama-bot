@@ -24,6 +24,9 @@ class Llama(commands.Bot):
     owner_id = 501277805540147220
     owner_ids = {owner_id, 396333737148678165}
 
+    # set of essential cogs
+    essential_cogs: set[str] = set()
+
     def __init__(self, firebase_cred_path: str, prefix: str = "-"):
         super().__init__(
             help_command=None,  # to overwrite with custom help command
