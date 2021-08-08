@@ -1,3 +1,5 @@
+import inspect
+from discord.ext.commands.context import Context
 from llama import Llama
 from . import _util as util
 
@@ -12,9 +14,14 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
 
-        self.quotes = self.bot.settings["settings"]["quotes"]
-        random.shuffle(self.quotes)
-        self.quote_index = 0
+        self.quotes: list[str] = self.bot.db.get_bot_settings()["quotes"]
+        self.quotes_length = len(self.quotes)
+
+        # key: server snowflake, value: index array
+        self.quote_indices: dict[int, list[int]] = dict()
+
+        # key: server snowflake, value: current quote index of server
+        self.quote_current_index: dict[int, int] = dict()
 
     # block DM commands
     async def cog_check(self, ctx: commands.Context):
@@ -28,71 +35,79 @@ class Fun(commands.Cog):
         ],
         help="Shows a random llama quote.",
     )
-    async def llama(self, ctx):
-        # the reason why I don't use random.choice is because it may give two of the same result consecutively.
-        quote = self.quotes[self.quote_index]
+    async def llama(self, ctx: Context):
+        server_snowflake: int = ctx.guild.id
+
+        # if server index array is not initialized
+        if server_snowflake not in self.quote_indices:
+            self.quote_indices[server_snowflake] = list(range(self.quotes_length))
+            random.shuffle(self.quote_indices[server_snowflake])
+
+        # if server current index is not set
+        if server_snowflake not in self.quote_current_index:
+            self.quote_current_index[server_snowflake] = 0
+
         await ctx.send(
             embed=discord.Embed(
-                title="Llama quote that'll make your day", description=quote
+                title="Llama quote that'll make your day",
+                description=self.quotes[
+                    self.quote_indices[server_snowflake][
+                        self.quote_current_index[server_snowflake]
+                    ]
+                ],
             )
         )
 
-        self.quote_index += 1  # get next quote next time this command is called
-        if self.quote_index > (len(self.quotes) - 1):  # reshuffle and reset index
-            random.shuffle(self.quotes)
-            self.quote_index = 0
+        self.quote_current_index[server_snowflake] += 1
+        if self.quote_current_index[server_snowflake] > (self.quotes_length - 1):
+            # reshuffle and reset index
+            random.shuffle(self.quote_indices[server_snowflake])
+            self.quote_current_index[server_snowflake] = 0
 
     @commands.command(
         aliases=[
             "pp",
         ],
-        help="""Detects user's penis length and arranges them from largest to smallest.
+        help="""Measure user's pp length and arrange them in ascending order.
+Shortest length: 0 (`8D`).
+Longest length: 30 (`8==============================D`).
+
 This is 101% accurate.""",
-        usage="""> {prefix}{command} *<user>
+        usage="""> {prefix}{command} *[user]
 ex:
-Show penis length of <@501277805540147220> and <@641574882382970891>
-> {prefix}{command} <@501277805540147220> <@641574882382970891>
+> {prefix}{command} user1 user2
 """,
     )
-    async def penis(self, ctx, *users: discord.Member):
-        dongs = {}
-        msg = ""
+    async def penis(self, ctx: Context, *users: discord.Member):
+        # key: user snowflake, value: tuple of pp string and integer length
+        user_length: dict[int, tuple[str, int]] = dict()
+
         state = random.getstate()
 
-        for user in users:
-            random.seed(user.id)
+        for user_id in users:
+            random.seed(user_id.id)
             random_size = random.randint(0, 30)
-            dongs[user] = ["8{}D".format("=" * random_size), random_size]
+            user_length[user_id.id] = (f"8{'=' * random_size}D", random_size)
 
         if not users:
             random.seed(ctx.author.id)
             random_size = random.randint(0, 30)
-            dongs[ctx.author] = ["8{}D".format("=" * random_size), random_size]
+            user_length[ctx.author.id] = (f"8{'=' * random_size}D", random_size)
 
         random.setstate(state)
-        dongs = sorted(dongs.items(), key=lambda x: x[1][1])
-
-        for user, dong in dongs:
-            msg += "**%s's size: ( %s )**\n%s\n" % (user.mention, dong[1], dong[0])
 
         await ctx.send(
-            embed=discord.Embed(title="Here's your pp list", description=msg)
-        )
-
-    @commands.command(
-        help="Call for help.",
-    )
-    async def fix(self, ctx: discord.ext.commands.Context):
-        """
-        Bug report feature.
-        Removed due to excessive pinging
-
-        old code:
-        await ctx.send(f"Yo {', '.join([f'<@{fixer_id}>' for fixer_id in self.bot.fixer_ids])} fix this shit")
-        """
-
-        await ctx.send(
-            f"Fuck you {ctx.message.author.mention} <:coronalol:692323993419776020>"
+            embed=discord.Embed(
+                title="pp",
+                description="\n".join(
+                    [
+                        f"**<@{user_id}>: {dong[1]}**\n{dong[0]}\n"
+                        for user_id, dong in sorted(
+                            user_length.items(), key=lambda x: x[1][1]
+                        )
+                    ]
+                ),
+            )
         )
 
     @commands.command(
@@ -107,7 +122,7 @@ Can chose from:
 ex:
 > {prefix}{command} neko""",
     )
-    async def img(self, ctx, target: str):
+    async def img(self, ctx: Context, target: str):
         non_nsfw = [
             "feed",
             "gecg",
@@ -190,7 +205,7 @@ ex:
             return
 
         if in_nsfw and not ctx.message.channel.is_nsfw():
-            raise discord.ext.commands.errors.NSFWChannelRequired
+            raise commands.errors.NSFWChannelRequired(ctx.channel)
 
         image_url = nekos.img(target.lower())
         await ctx.send(
@@ -202,9 +217,7 @@ ex:
             .set_footer(text=f"powered by nekos.life")
         )
 
-    @commands.command(
-        help="Shows useless facts.",
-    )
+    @commands.command(help="Shows useless facts.", usage="""> {prefix}{command}""")
     async def fact(self, ctx):
         await ctx.send(
             embed=discord.Embed(title="Fact of the day", description=nekos.fact())
@@ -214,9 +227,14 @@ ex:
         aliases=[
             "clapify",
         ],
-        help="does the karen clap thing. Does not work with external emojis",
+        help="does the annoying Karen clap. Does not work with external emojis.",
+        usage="""> {prefix}{command} Put text to clapify here""",
     )
-    async def clap(self, ctx, *args):
+    async def clap(self, ctx, arg1, *args):
+        # using arg1 to make sure that at least one argument is passed
+
+        args = list(args)
+        args.insert(0, arg1)
         await ctx.send(" :clap: ".join(args))
 
 
