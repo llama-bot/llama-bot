@@ -13,6 +13,7 @@ class LlamaBotDB:
     https://firebase.google.com/docs/firestore
     """
 
+    # saving server-specific data (ex: admin channel, rules message, verified role)
     # key: discord guild snowflake | value: dictionary: next line
     # key: channels, messages, roles | value: list of key value pair data
     vars: dict[
