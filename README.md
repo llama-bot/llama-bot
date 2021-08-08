@@ -17,7 +17,7 @@ llama bot is a [discord](https://discord.com) bot made for the LP community [ser
 - The bot requires Python version 3.9 or greater.
 - local configuration file and database does not exist. Everything is stored in google firebase. Portability ftw!
 
-Example:
+Example:<br />
 ![example image of bot usage](.github/example.png)
 
 # Setting up locally
