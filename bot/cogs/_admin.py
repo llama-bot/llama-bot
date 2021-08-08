@@ -12,11 +12,14 @@ class Admin(commands.Cog):
         self.bot: Llama = bot
 
         self.allowed_channels: list[discord.TextChannel] = [
-            self.bot.LP_SERVER.get_channel(int(self.bot.VARS["channels"]["ADMIN_BOT"])),
+            self.bot.LP_SERVER.get_channel(
+                int(self.bot.settings["channels"]["ADMIN_BOT"])
+            ),
         ]
 
         self.draft_common_message = "required to create a new draft"
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool
@@ -122,7 +125,7 @@ Listing available drafts:
             self.draft_id_required_error_message(draft_id)
 
             try:  # check if draft already exists
-                if self.bot.VARS["drafts"][draft_id]:
+                if self.bot.settings["drafts"][draft_id]:
                     await ctx.send(
                         embed=discord.Embed(
                             title="Draft already exists",
@@ -145,8 +148,8 @@ Listing available drafts:
 
             # update local and database vars
             json_embed_data = json.dumps(new_embed_data)
-            self.bot.VARS["drafts"][draft_id] = json_embed_data
-            self.bot.llama_firebase.create("vars", "drafts", draft_id, json_embed_data)
+            self.bot.settings["drafts"][draft_id] = json_embed_data
+            self.bot.db.write_data("vars", "drafts", draft_id, json_embed_data)
 
             # feedback
             await ctx.send(
@@ -160,7 +163,7 @@ Listing available drafts:
 
             try:
                 # delete draft from local variable
-                del self.bot.VARS["drafts"][draft_id]
+                del self.bot.settings["drafts"][draft_id]
             except KeyError:  # when draft id is not found
                 await ctx.send(
                     embed=discord.Embed(
@@ -171,7 +174,7 @@ Listing available drafts:
                 return
 
             # delete if it's not found in local variable
-            self.bot.llama_firebase.delete("vars", "drafts", draft_id)
+            self.bot.db.delete_data("vars", "drafts", draft_id)
 
             # feedback
             await ctx.send(
@@ -184,7 +187,7 @@ Listing available drafts:
             self.draft_id_required_error_message(draft_id)
 
             try:  # check if draft exists
-                self.bot.VARS["drafts"][draft_id]
+                self.bot.settings["drafts"][draft_id]
             except KeyError:  # draft does not exist. Show error message.
                 await ctx.send(
                     embed=discord.Embed(
@@ -195,7 +198,7 @@ Listing available drafts:
                 return
 
             # create new embed with default values
-            new_embed_data = json.loads(self.bot.VARS["drafts"][draft_id])
+            new_embed_data = json.loads(self.bot.settings["drafts"][draft_id])
             new_embed_data["title"] = "title"
             new_embed_data["description"] = "description"
             new_embed_data["color"] = 0
@@ -206,8 +209,8 @@ Listing available drafts:
 
             # update local and database vars
             json_embed_data = json.dumps(new_embed_data)
-            self.bot.VARS["drafts"][draft_id] = json_embed_data
-            self.bot.llama_firebase.write("vars", "drafts", draft_id, json_embed_data)
+            self.bot.settings["drafts"][draft_id] = json_embed_data
+            self.bot.db.write_data("vars", "drafts", draft_id, json_embed_data)
 
             # feedback
             await ctx.send(
@@ -220,7 +223,7 @@ Listing available drafts:
             self.draft_ids_are_required_error_message(draft_id, draft_id2)
 
             try:  # check if draft id is available
-                if self.bot.VARS["drafts"][draft_id2]:
+                if self.bot.settings["drafts"][draft_id2]:
                     await ctx.send(
                         embed=discord.Embed(
                             title="Name not available",
@@ -232,9 +235,11 @@ Listing available drafts:
                 pass  # draft id is available. Can create a copy.
 
             # update local and database vars
-            self.bot.VARS["drafts"][draft_id2] = self.bot.VARS["drafts"][draft_id]
-            self.bot.llama_firebase.create(
-                "vars", "drafts", draft_id2, self.bot.VARS["drafts"][draft_id2]
+            self.bot.settings["drafts"][draft_id2] = self.bot.settings["drafts"][
+                draft_id
+            ]
+            self.bot.db.write_data(
+                "vars", "drafts", draft_id2, self.bot.settings["drafts"][draft_id2]
             )
 
             # feedback
@@ -248,7 +253,7 @@ Listing available drafts:
             self.draft_ids_are_required_error_message(draft_id, draft_id2)
 
             try:  # check if draft id is available
-                if self.bot.VARS["drafts"][draft_id2]:
+                if self.bot.settings["drafts"][draft_id2]:
                     await ctx.send(
                         embed=discord.Embed(
                             title="Name not available",
@@ -260,11 +265,13 @@ Listing available drafts:
                 pass  # draft id is available. Can rename draft.
 
             # update local and database vars
-            self.bot.VARS["drafts"][draft_id2] = self.bot.VARS["drafts"][draft_id]
-            del self.bot.VARS["drafts"][draft_id]
-            self.bot.llama_firebase.delete("vars", "drafts", draft_id)
-            self.bot.llama_firebase.create(
-                "vars", "drafts", draft_id2, self.bot.VARS["drafts"][draft_id2]
+            self.bot.settings["drafts"][draft_id2] = self.bot.settings["drafts"][
+                draft_id
+            ]
+            del self.bot.settings["drafts"][draft_id]
+            self.bot.db.delete_data("vars", "drafts", draft_id)
+            self.bot.db.write_data(
+                "vars", "drafts", draft_id2, self.bot.settings["drafts"][draft_id2]
             )
 
             # feedback
@@ -281,7 +288,7 @@ Listing available drafts:
                 await ctx.send(
                     f"> preview of draft **{draft_id}**",
                     embed=discord.Embed.from_dict(
-                        json.loads(self.bot.VARS["drafts"][draft_id])
+                        json.loads(self.bot.settings["drafts"][draft_id])
                     ),
                 )
             except KeyError:
@@ -299,7 +306,7 @@ Listing available drafts:
                     title=draft_id,
                     description="```%s```"
                     % json.dumps(
-                        json.loads(self.bot.VARS["drafts"][draft_id]), indent=4
+                        json.loads(self.bot.settings["drafts"][draft_id]), indent=4
                     ),
                 )
             )
@@ -308,8 +315,8 @@ Listing available drafts:
                 embed=discord.Embed(
                     title="List of drafts",
                     description="Nothing found"
-                    if not self.bot.VARS["drafts"]
-                    else "".join([f"\n- **{i}**" for i in self.bot.VARS["drafts"]]),
+                    if not self.bot.settings["drafts"]
+                    else "".join([f"\n- **{i}**" for i in self.bot.settings["drafts"]]),
                 )
             )
 

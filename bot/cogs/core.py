@@ -16,6 +16,7 @@ class Core(commands.Cog):
         # remove any potential existing help command to prevent collision
         self.bot.remove_command("help")
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool
@@ -152,6 +153,20 @@ Shows info about `ping` command:
                             ),
                         )
                     )
+
+    @commands.command(
+        help="Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
+    )
+    async def ping(self, ctx):
+        message_latency = int(
+            (datetime.now() - ctx.message.created_at).microseconds / 1000
+        )
+        embed = (
+            discord.Embed(description="**TR1GGERED**")
+            .add_field(name="Message latency", value=f"{message_latency}ms")
+            .add_field(name="API latency", value=f"{int(self.bot.latency * 1000)}ms")
+        )
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

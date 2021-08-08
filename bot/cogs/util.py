@@ -4,13 +4,12 @@ from . import _util as util
 import discord
 from discord.ext import commands
 
-from datetime import datetime
-
 
 class Util(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool
@@ -36,23 +35,9 @@ ex:
             return
         await ctx.send(
             embed=discord.Embed(
-                description=f"snowflake `{snowflake_to_parse}` was created in: `{datetime_data}`"
+                description=f"snowflake `{snowflake_to_parse}` was created in: `{datetime_data} UTC`"
             )
         )
-
-    @commands.command(
-        help="Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
-    )
-    async def ping(self, ctx):
-        message_latency = int(
-            (datetime.now() - ctx.message.created_at).microseconds / 1000
-        )
-        embed = (
-            discord.Embed(description="**TR1GGERED**")
-            .add_field(name="Message latency", value=f"{message_latency}ms")
-            .add_field(name="API latency", value=f"{int(self.bot.latency * 1000)}ms")
-        )
-        await ctx.send(embed=embed)
 
 
 def setup(bot):

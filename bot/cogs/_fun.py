@@ -12,10 +12,11 @@ class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
 
-        self.quotes = self.bot.VARS["settings"]["quotes"]
+        self.quotes = self.bot.settings["settings"]["quotes"]
         random.shuffle(self.quotes)
         self.quote_index = 0
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool

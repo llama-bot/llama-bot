@@ -1,12 +1,11 @@
 # I'm aware that I can use @commands.bot_has_permissions. It's a choice.
-from discord import guild
 from llama import Llama
 
 import discord
 from discord.ext import commands
 
 from datetime import datetime
-from typing import Union
+from typing import Literal, Union
 import re
 
 
@@ -52,17 +51,17 @@ def url_from_str(string: str) -> list:
     return [x[0] for x in url]
 
 
-def snowflake_to_datetime(snowflake: int):
+def snowflake_to_datetime(snowflake: int) -> datetime:
     return datetime.utcfromtimestamp(((int(snowflake) >> 22) + 1420070400000) / 1000)
 
 
 def convert_to_partial_emoji(raw: Union[str, int], bot: Llama) -> discord.PartialEmoji:
     # test if raw is an integer
     try:
-        emoji_id: int = int(raw)
+        emoji_id = int(raw)
 
         # check if emoji exists
-        emoji: discord.Emoji = bot.LP_SERVER.get_emoji(emoji_id)
+        emoji: discord.Emoji = bot.get_emoji(emoji_id)
         if not emoji:
             raise Exception(f"Cannot convert {raw} to discord Emoji.")
 
@@ -75,16 +74,18 @@ def convert_to_partial_emoji(raw: Union[str, int], bot: Llama) -> discord.Partia
         return discord.PartialEmoji(name=raw.strip())
 
 
-async def on_pm(message: discord.Message, bot: Llama):
-    if not message.guild and message.author != bot.user:
-        err_msg = "DM commands are not supported."
-        await message.channel.send(
-            embed=discord.Embed(
-                title=":exclamation: " + err_msg,
-                description="react with a `:broom:` :broom: emoji to delete existing messages",
-            ),
-            delete_after=5.0,
-        )
-        return commands.NoPrivateMessage(err_msg)
-    else:
+async def on_pm(
+    message: discord.Message, bot: Llama
+) -> Union[Literal[False], commands.NoPrivateMessage]:
+    if message.guild or message.author == bot.user:
         return False
+
+    err_msg = "DM commands are not supported."
+    await message.channel.send(
+        embed=discord.Embed(
+            title=":exclamation: " + err_msg,
+            description="react with a :broom: emoji (`:broom:`) to delete existing messages.\nThis message will delete itself in 5 seconds.",
+        ),
+        delete_after=5.0,
+    )
+    return commands.NoPrivateMessage(err_msg)
