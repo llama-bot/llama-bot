@@ -154,27 +154,6 @@ class Llama(commands.Bot):
         print("=" * 30)
         print("")
 
-    # ----- [ BOT METHODS ] -----
-
-    def fetch_data(server_id: int, data_path: str) -> Any:
-        return ""
-
-    def role_macro(self, server: discord.Guild, name) -> Optional[discord.Role]:
-        """
-        Get discord role by name
-        """
-        return discord.utils.get(
-            server.roles, id=int(self.db.get_document(server.id, "vars")["roles"][name])
-        )
-
-    def channel_macro(self, server: discord.Guild, name) -> discord.abc.GuildChannel:
-        """
-        Get discord channel by name
-        """
-        return server.get_channel(
-            int(self.db.get_document(server.id, "vars")["channels"][name])
-        )
-
 
 def main():
     try:

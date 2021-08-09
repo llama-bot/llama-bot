@@ -58,6 +58,11 @@ class LlamaBotDB:
         data_type: Union[Literal["channels"], Literal["messages"], Literal["roles"]],
         key,
     ):
+        """
+        channel -> channel_id string
+        message -> channel_id/message_id string
+        role -> role id
+        """
         if data_type not in ["channels", "messages", "roles"]:
             raise Exception(
                 "first argument must be either 'channels', 'messages', or 'roles'"
@@ -143,7 +148,7 @@ Carl: Thank you.""",
     def read_server(self, server_id) -> dict:
         return {doc.id: doc.to_dict() for doc in self.get_server(server_id).stream()}
 
-    def get_document(self, server_id, document_id) -> dict:
+    def get_server_document(self, server_id, document_id) -> dict:
         result = (
             self.get_server(server_id).document(u"%s" % document_id).get().to_dict()
         )
