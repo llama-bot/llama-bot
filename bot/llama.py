@@ -1,4 +1,5 @@
-from llama_firebase import LlamaFirebase
+from google.cloud.firestore_v1.collection import CollectionReference
+from llama_bot_db import LlamaBotDB
 import cogs._util as util
 
 import discord
@@ -6,12 +7,12 @@ from discord.ext import commands
 
 from os import listdir, path
 from time import time
-from typing import Union
+from typing import Any, Optional
 import traceback
 import json
 
 
-def resolve_path(relative_path: str):
+def resolve_path(relative_path: str) -> str:
     """
     Converts relative path to absolute path for when the bot was executed in arbitrary path
     """
@@ -19,13 +20,12 @@ def resolve_path(relative_path: str):
 
 
 class Llama(commands.Bot):
-    # the server the bot is intended to run on. It's useful to have this reference available.
-    LP_SERVER: discord.Guild
-    server_id: int = 457373827073048604
-
     # IDs of users who can run owners only commands
-    owner_id: int = 501277805540147220
-    owner_ids: set = {owner_id, 396333737148678165}
+    owner_id = 501277805540147220
+    owner_ids = {owner_id, 396333737148678165}
+
+    # set of essential cogs
+    essential_cogs: set[str] = set()
 
     def __init__(self, firebase_cred_path: str, prefix: str = "-"):
         super().__init__(
@@ -35,68 +35,41 @@ class Llama(commands.Bot):
         )
 
         # create firestore interface
-        self.llama_firebase: LlamaFirebase = LlamaFirebase(firebase_cred_path)
-
-        # read all configs and data for better responsiveness
-        self.VARS = self.llama_firebase.read_collection("vars")
+        self.db: LlamaBotDB = LlamaBotDB(firebase_cred_path)
+        self.settings = self.db.get_bot_settings()
 
     # ----- [ DISCORD.PY STUFF ] -----
 
     async def on_ready(self):
         """
-        variables in this function are checked if they exist before getting defined (reading from firebase which takes time)
-        because the function on_ready() can be called multiple times as mentined in the discord.py documentaton:
+        variables in this function should be checked if they exist before fetching them from firebase.
+        This method can be called multiple times as warned in the discord.py documentaton:
         https://discordpy.readthedocs.io/en/latest/api.html#discord.on_ready
         """
 
-        # Prevents bot from running in server other than LP's
-        if not hasattr(self, "LP_SERVER"):
-            self.LP_SERVER: discord.Guild = next(
-                (guild for guild in self.guilds if guild.id == self.server_id), None
-            )
-
-        if not self.LP_SERVER:
-            print("----------[ The bot is not in LP server! ]----------")
-            exit(69)
-
-        # load roles
-        if not hasattr(self, "self.HIGHEST_ORDER"):
-            self.HIGHEST_ORDER = self.get_role_from_vars("HIGHEST_ORDER")
-
-        if not hasattr(self, "self.LPWB_MEMBER"):
-            self.LPWB_MEMBER = self.get_role_from_vars("LPWB_MEMBER")
-
-        if not hasattr(self, "self.SILK_PERMISSION"):
-            self.SILK_PERMISSION = self.get_role_from_vars("SILK_PERMISSION")
-
-        if not hasattr(self, "self.PYJAMAS"):
-            self.PYJAMAS = self.get_role_from_vars("PYJAMAS")
-
-        # define roles with access to special features
-        self.LLAMA_PERMS = [
-            getattr(self, i) for i in self.VARS["settings"]["LLAMA_PERM"]
-        ]
-        self.PIN_PERMISSIONS = [
-            getattr(self, i) for i in self.VARS["settings"]["PIN_PERM"]
-        ]
-
-        # load cogs at the very last moment as some of them require data from the database
-        # load all cogs that do not begin with a underscore
+        # load all cog files that do not begin with a underscore
         cogs_dir = resolve_path("./cogs")
-        for cog in [
+        for cog_path in [
             f"cogs.{path.splitext(f)[0]}"
             for f in listdir(cogs_dir)
             if path.isfile(path.join(cogs_dir, f)) and not f[0] == "_"
         ]:
-            print(f"loading cog: {cog}")
+            print(f"loading cog: {cog_path}")
             try:
-                self.load_extension(cog)
+                self.load_extension(cog_path)
             except commands.ExtensionAlreadyLoaded:
-                print(f"Extension {cog} was already loaded. Skipping.")
+                print(f"Extension {cog_path} was already loaded. Skipping.")
 
         # to show bot uptime
         if not hasattr(self, "start_time"):
             self.start_time = time()
+
+        guild: discord.Guild
+        for guild in self.guilds:
+            # settings
+            ref: CollectionReference = self.db.servers_ref.collection("%s" % guild.id)
+            if not ref.limit(1).get():
+                self.db.create_server("%s" % guild.id)
 
         print(f"{self.user} is up and ready!")
 
@@ -180,20 +153,6 @@ class Llama(commands.Bot):
         traceback.print_exception(type(error), error, error.__traceback__)
         print("=" * 30)
         print("")
-
-    # ----- [ BOT METHODS ] -----
-
-    def get_role_from_vars(self, name) -> Union[discord.Role, None]:
-        """
-        Get discord role by name
-        """
-        return discord.utils.get(self.LP_SERVER.roles, id=int(self.VARS["roles"][name]))
-
-    def get_channel_from_vars(self, name) -> discord.abc.GuildChannel:
-        """
-        Get discord channel by name
-        """
-        return self.LP_SERVER.get_channel(int(self.VARS["channels"][name]))
 
 
 def main():

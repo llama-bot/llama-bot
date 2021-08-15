@@ -1,7 +1,8 @@
+from llama import Llama
+import cogs._util as util
 import wbscraper.player
 import wbscraper.commons
 import wbscraper.data
-import cogs._util as util
 
 import discord
 from discord.ext import commands
@@ -25,17 +26,17 @@ class WarBrokers(commands.Cog):
 
         self.help_msg = f"<#{self.bot.VARS['channels']['LLAMAS_AND_PYJAMAS_INFO']}> and <#{self.bot.VARS['channels']['ACTIVE']}> automatically updates when the contents of the database is changed."
 
-        self.active_roster_channel = self.bot.LP_SERVER.get_channel(
+        self.active_roster_channel = self.bot.get_channel(
             int(self.bot.VARS["channels"]["ACTIVE"])
         )
-        self.lp_info_channel = self.bot.LP_SERVER.get_channel(
+        self.lp_info_channel = self.bot.get_channel(
             int(self.bot.VARS["channels"]["LLAMAS_AND_PYJAMAS_INFO"])
         )
 
     async def update_player(self, user_id: int):
         """Update LP member list message"""
         user_id = int(user_id)
-        player = self.bot.llama_firebase.read("players", user_id)
+        player = self.bot.db.read("players", user_id)
         stat_page_url = wbscraper.URL.join(
             wbscraper.URL.stat_root, "players/i", player["uid"]
         )
@@ -67,13 +68,11 @@ class WarBrokers(commands.Cog):
             await stat_msg.edit(embed=embed)
         except (KeyError, discord.NotFound):
             info_message = await self.lp_info_channel.send(embed=embed)
-            self.bot.llama_firebase.write(
-                "players", user_id, "message_id", info_message.id
-            )
+            self.bot.db.write("players", user_id, "message_id", info_message.id)
 
-    async def update_active(self):
+    async def update_active(self, server_id):
         """Update active roster message"""
-        players = self.bot.llama_firebase.read_collection("players")
+        players = self.bot.db.get_document(server_id, "war_brokers")
 
         description = ""
         for game_server in self.WB_GAME_SERVERS:
@@ -104,7 +103,7 @@ class WarBrokers(commands.Cog):
             await active_msg.edit(embed=embed)
         except (KeyError, discord.NotFound):
             active_msg = await self.active_roster_channel.send(embed=embed)
-            self.bot.llama_firebase.write("vars", "messages", "ACTIVE", active_msg.id)
+            self.bot.db.write("vars", "messages", "ACTIVE", active_msg.id)
 
     @commands.command(
         help="Sets/updates data in the database.",
@@ -135,7 +134,7 @@ ex:
 > {prefix}{command} server ASIA USA
 """,
     )
-    async def set(self, ctx, field: str, *args):
+    async def set(self, ctx: commands.Context, field: str, *args):
         # check if user is authorized to use this command
         if not util.lists_has_intersection(
             self.bot.LLAMA_PERMS, ctx.message.author.roles
@@ -165,8 +164,8 @@ ex:
                 + "\n- ".join(available_fields)
             )
 
-        user_exists_in_firestore = self.bot.llama_firebase.exists(
-            "players", ctx.message.author.id
+        user_exists_in_firestore = self.bot.db.document_exists(
+            "war_brokers", ctx.message.author.id
         )
 
         if field == "uid":
@@ -187,9 +186,7 @@ ex:
                 complete_msg = "New player registered!"
 
             await msg.edit(embed=discord.Embed(description=original_content))
-            self.bot.llama_firebase.create(
-                "players", ctx.message.author.id, "uid", args[0]
-            )
+            self.bot.db.create("players", ctx.message.author.id, "uid", args[0])
             await msg.edit(
                 embed=discord.Embed(description=f"{original_content}\n{complete_msg}")
             )
@@ -200,7 +197,7 @@ ex:
             updated_player_list = False
 
             if field in ["weapon", "time"]:
-                self.bot.llama_firebase.write(
+                self.bot.db.write(
                     "players", ctx.message.author.id, field, " ".join(args)
                 )
                 await self.update_player(ctx.message.author.id)
@@ -209,13 +206,13 @@ ex:
                 if all(
                     i in self.WB_GAME_SERVERS for i in args
                 ):  # if all the inputs is a valid server
-                    self.bot.llama_firebase.write(
+                    self.bot.db.write(
                         "players",
                         ctx.message.author.id,
                         "server",
                         ",".join(list(dict.fromkeys(args))),
                     )  # Not doing join(args) to remove duplicate inputs
-                    await self.update_active()
+                    await self.update_active(ctx.guild.id)
                     updated_active = True
                 else:
                     err_message = f"""
@@ -281,7 +278,7 @@ Removes time and weapon data from the database
             )
             return
 
-        if not self.bot.llama_firebase.exists("players", ctx.message.author.id):
+        if not self.bot.db.exists("players", ctx.message.author.id):
             await ctx.send(
                 embed=discord.Embed(
                     title="User not found in the database",
@@ -295,9 +292,7 @@ Removes time and weapon data from the database
             fields_that_does_not_exist = []
             for field in fields:
                 try:
-                    self.bot.llama_firebase.read("players", ctx.message.author.id)[
-                        field
-                    ]
+                    self.bot.db.read("players", ctx.message.author.id)[field]
                 except KeyError:
                     fields_that_does_not_exist.append(field)
 
@@ -312,7 +307,7 @@ Removes time and weapon data from the database
                 )
 
             for field in fields:
-                self.bot.llama_firebase.delete("players", ctx.message.author.id, field)
+                self.bot.db.delete("players", ctx.message.author.id, field)
 
             fields_removed = list(set(fields) - set(fields_that_does_not_exist))
             if fields_removed:

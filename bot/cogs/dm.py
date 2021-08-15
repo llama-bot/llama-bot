@@ -8,11 +8,18 @@ from discord.ext import commands
 class DM(commands.Cog):
     def __init__(self, bot):
         self.bot: Llama = bot
+        self.bot.essential_cogs.add("core")
 
         self.emojis: set[discord.PartialEmoji] = set()
 
-        for emoji_raw in self.bot.VARS["dm"]["emojis"]:
+        for emoji_raw in self.bot.settings["clear_emojis"]:
             self.emojis.add(util.convert_to_partial_emoji(emoji_raw, self.bot))
+
+    # block DM commands
+    async def cog_check(self, ctx: commands.Context):
+        if exception_or_bool := await util.on_pm(ctx.message, self.bot):
+            raise exception_or_bool
+        return not exception_or_bool
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
