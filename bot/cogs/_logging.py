@@ -35,6 +35,7 @@ class Logging(commands.Cog):
             int, dict[int, list[discord.RawMessageDeleteEvent]]
         ] = dict()
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool

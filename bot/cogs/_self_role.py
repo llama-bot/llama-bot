@@ -12,13 +12,14 @@ class SelfRole(commands.Cog):
         self.bot: Llama = bot
 
         # {"CHANNEL_ID/MESSAGE_ID": ["EMOJI_ID_OR_NAME;ROLE_ID", ...], ...}
-        self.binds: dict = self.bot.llama_firebase.read("vars", "selfrole_messages")
+        self.binds: dict = self.bot.db.read_document("vars", "selfrole_messages")
 
         self.help_msg = ""
         self.main_help_fields = [
             ["Self role", "Only admins can create self role message"],
         ]
 
+    # block DM commands
     async def cog_check(self, ctx: commands.Context):
         if exception_or_bool := await util.on_pm(ctx.message, self.bot):
             raise exception_or_bool
@@ -188,7 +189,7 @@ Are you sure it's not a {three} from other server?""".format(
                 - set(self.binds[message_path])
             )
             # push to firebase
-            self.bot.llama_firebase.write(
+            self.bot.db.write_data(
                 "vars", "selfrole_messages", message_path, self.binds[message_path]
             )
             # add reaction
@@ -241,11 +242,9 @@ Are you sure it's not a {three} from other server?""".format(
             # remove list if empty
             if not self.binds[message_path]:
                 self.binds.pop(message_path)
-                self.bot.llama_firebase.delete(
-                    "vars", "selfrole_messages", message_path
-                )
+                self.bot.db.delete_data("vars", "selfrole_messages", message_path)
             else:
-                self.bot.llama_firebase.write(
+                self.bot.db.write_data(
                     "vars",
                     "selfrole_messages",
                     message_path,
