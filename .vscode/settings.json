@@ -8,5 +8,6 @@
   ],
   "cSpell.words": [
     "pinnable"
-  ]
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
