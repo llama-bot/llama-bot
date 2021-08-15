@@ -15,7 +15,7 @@ Invitation of this bot to other server is blocked as of the moment. You wll have
 
 ## Setting up
 
-[official documentation](https://llama-bot.github.io/llama-bot-docs)
+[official documentation](https://llama-bot.github.io/llama-bot-docs/docs/bot/setting-up)
 
 ## Contributing
 
