@@ -12,42 +12,42 @@ from threading import Timer
 
 
 class Pinning(commands.Cog):
+    # Roles that are allowed to pin messages
+    # key: server id | value: set of role ids
+    allowed_roles: dict[int, set[int]] = dict()
+
+    # key: server id | value: set of channel ids
+    enabled_channels: dict[int, set[int]] = dict()
+
+    # key: server id | value: set of (source channel id, destination channel id) tuple
+    archive_maps: dict[int, set[tuple[int, int]]] = dict()
+
+    # Emojis that are used to pin a message
+    # key: server id | value: set of discord partial emojis
+    pin_emojis: dict[int, set[discord.PartialEmoji]] = dict()
+
+    # Messages that are in this record can not be pinned.
+    # This is to prevent pin spamming or accidental double pin.
+    # key: server id | key: set of (channel_id, message_id) tuple
+    recently_pinned_messages: dict[int, set[tuple[int, int]]] = dict()
+
+    # Timer for recently_pinned_messages measured in seconds
+    # key: server id | value: float
+    pin_cooldown: dict[int, float] = dict()
+
     def __init__(self, bot):
         self.bot: Llama = bot
-
-        # Emojis that will be used to pin a message
-        self.pin_emojis: set[discord.PartialEmoji] = set()
-
-        # A set of (channel_id, message_id) tuple that are waiting for pin cooldown.
-        # Messages in this list can't be pinned.
-        # This is here to prevent pin spamming or accidental double pin
-        self.recently_pinned_messages: set[tuple[int, int]] = set()
-
-        # message pin cooldown per message measured in seconds
-        self.pin_cooldown: float = 10.0
-
-        # A set of (source_channel_id, destination_channel_id) tuple where the pins will be mapped.
-        self.channel_maps: set[tuple[int, int]] = self.channel_maps_read()
-
-        # A set of discord text channels with reaction pinning enabled.
-        # not using channel ids and position because it makes the code messier without providing much performace benefits.
-        self.pinnable_channels: set[discord.TextChannel] = self.pinnable_channels_read()
-
-        # emoji_raw is either unicode string or int (emoji name or emoji id)
-        for emoji_raw in self.bot.settings["pinbot"]["pin_reaction"]:
-            try:
-                self.pin_emojis.add(util.convert_to_partial_emoji(emoji_raw, self.bot))
-            except Exception:
-                traceback.print_exc()
 
         self.help_msg = ""
         self.main_help_fields = [
             [
                 "Pinning",
-                f"""Add one of these reactions to pin a message: {' | '.join(map(str, self.pin_emojis))}
-You'll need at least one of the following roles to use this feature: {' | '.join([role.mention for role in self.bot.PIN_PERMISSIONS])}""",
+                """Add one of these reactions to pin a message: %s
+You'll need at least one of the following roles to use this feature: %s""",
             ],
         ]
+        # {' | '.join(map(str, self.pin_emojis))}
+        # {' | '.join([role.mention for role in self.bot.PIN_PERMISSIONS])}
 
     # block DM commands
     async def cog_check(self, ctx: commands.Context):
@@ -55,7 +55,7 @@ You'll need at least one of the following roles to use this feature: {' | '.join
             raise exception_or_bool
         return not exception_or_bool
 
-    def channel_maps_read(self) -> set[(int, int)]:
+    def get_archive_map(self) -> set[(int, int)]:
         res: set[(int, int)] = set()
         self.bot.settings["pinbot"] = self.bot.db.read_document("vars", "pinbot")
         for map_str in self.bot.settings["pinbot"]["maps"]:
