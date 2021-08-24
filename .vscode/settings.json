@@ -1,13 +1,5 @@
 {
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
-
-  "python.formatting.provider": "black",
-  "python.analysis.extraPaths": [
-    "./bot"
-  ],
-  "cSpell.words": [
-    "pinnable"
-  ],
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.formatOnPaste": true
 }

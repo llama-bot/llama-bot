@@ -1,0 +1,24 @@
+{
+	"name": "llama-bot",
+	"main": "build/index.js",
+	"version": "1.0.0",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"start": "yarn build && node --no-deprecation build/index.js",
+		"test": "yarn build && node --trace-deprecation build/index.js",
+		"build": "tsc"
+	},
+	"dependencies": {
+		"@sapphire/framework": "^1.0.2",
+		"discord.js": "^13.1.0",
+		"dotenv": "^10.0.0",
+		"firebase-admin": "^9.11.0"
+	},
+	"devDependencies": {
+		"@types/node": "^16.6.1",
+		"eslint": "^7.32.0",
+		"tslint-config-prettier": "^1.18.0",
+		"typescript": "^4.3.5"
+	}
+}
