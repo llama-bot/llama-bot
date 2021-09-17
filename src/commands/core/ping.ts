@@ -1,38 +1,54 @@
 import { Command, CommandOptions, PieceContext } from "@sapphire/framework"
+import { ApplyOptions } from "@sapphire/decorators"
 import { Message, MessageEmbed } from "discord.js"
 
+@ApplyOptions<CommandOptions>({
+	aliases: ["p"],
+	description:
+		"Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
+})
 export default class PingCommand extends Command {
-	constructor(context: PieceContext, options: CommandOptions) {
-		super(context, {
-			...options,
-			name: "ping",
-			aliases: ["p"],
-			description:
-				"Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
-		})
-	}
-
 	async run(message: Message) {
 		// compute as early as possible
-		const latency = Date.now() - message.createdTimestamp
+		const embedDescription = `**TR1GGERED** by ${message.author}`
 
-		message.channel.send({
-			embeds: [
-				new MessageEmbed()
-					.setDescription(`**TR1GGERED** by ${message.author}`)
-					.addFields(
+		message.channel
+			.send({
+				embeds: [
+					new MessageEmbed().setDescription(embedDescription).addFields(
 						{
-							name: "Message latency",
-							value: `${latency}ms`,
+							name: "API Latency",
+							value: "...",
 							inline: true,
 						},
 						{
 							name: "Bot latency",
-							value: `${this.context.client.ws.ping}ms`,
+							value: "...",
 							inline: true,
 						}
 					),
-			],
-		})
+				],
+			})
+			.then((msg) =>
+				msg.edit({
+					embeds: [
+						new MessageEmbed().setDescription(embedDescription).addFields(
+							{
+								name: "API latency",
+								value: `${
+									(msg.editedTimestamp || msg.createdTimestamp) -
+									(message.editedTimestamp || message.createdTimestamp)
+								}ms`,
+								inline: true,
+							},
+							{
+								name: "Bot latency",
+								value: `${Math.round(this.container.client.ws.ping)}ms`,
+								inline: true,
+							}
+						),
+					],
+				})
+			)
 	}
 }

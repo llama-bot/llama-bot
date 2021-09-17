@@ -1,17 +1,27 @@
 import { SapphireClient } from "@sapphire/framework"
 import dotenv from "dotenv"
+import db from "./db"
 
 dotenv.config()
+// do not start the bot if token is not found
 if (!process.env.TOKEN) throw Error("Token not found!")
+// set to false if not explicitly stated
+process.env.TESTING ??= "false"
+
+db.initialize()
 
 const client = new SapphireClient({
 	baseUserDirectory: __dirname,
-	defaultPrefix: "b-",
+	caseInsensitiveCommands: true,
+	caseInsensitivePrefixes: true,
+	defaultPrefix: process.env.TESTING == "true" ? "b-" : "-",
 	intents: ["GUILDS", "GUILD_MESSAGES"],
 })
 
-client.once("ready", () => {
-	console.log(`${client.user?.tag} (${client.user?.id}) is Ready!`)
-})
-
-client.login(process.env.TOKEN)
+// start the  bot
+try {
+	client.login(process.env.TOKEN)
+} catch (error) {
+	client.destroy()
+	process.exit(1)
+}
