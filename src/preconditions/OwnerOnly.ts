@@ -4,7 +4,9 @@ import type { Message } from "discord.js"
 import type { Snowflake } from "discord-api-types"
 
 export class UserPrecondition extends Precondition {
-	owners: Snowflake[] = ["501277805540147220"]
+	// convert comma separated string to array and remove empty values
+	// trailing comma and double comma can result in empty values
+	owners: Snowflake[] = process.env.OWNER_IDS.split(",").filter((elem) => elem)
 
 	public async run(message: Message) {
 		return this.owners.includes(message.author.id)
