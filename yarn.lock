@@ -277,10 +277,10 @@
   resolved "https://registry.yarnpkg.com/@sapphire/async-queue/-/async-queue-1.1.4.tgz#ae431310917a8880961cebe8e59df6ffa40f2957"
   integrity sha512-fFrlF/uWpGOX5djw5Mu2Hnnrunao75WGey0sP0J3jnhmrJ5TAPzHYOmytD5iN/+pMxS+f+u/gezqHa9tPhRHEA==
 
-"@sapphire/decorators@^3.0.0-next.9b57a291.0":
-  version "3.0.0-next.9b57a291.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/decorators/-/decorators-3.0.0-next.9b57a291.0.tgz#f7e0de246a36e3a9fd2d5532fcce139acc0bc118"
-  integrity sha512-ZKiCM4juKnUpsb1f9AffSJP/QI4sAifaYUO8NLeHUKoFv4CVeDTJgApGSfdmu5xFSzsP09wUrhDWXLhKO/e8hQ==
+"@sapphire/decorators@^3.0.0-next.a316abca.0":
+  version "3.0.0-next.a316abca.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/decorators/-/decorators-3.0.0-next.a316abca.0.tgz#112e21aca46d7b2834ee1bb0d172e48cd0bf896d"
+  integrity sha512-8pR0fB6OVzOLvPtK5nlYoBKRl3B2FBc6wUT1L4g05bMjN0UsY6HG/64afI/P3M/aCz25/M1emXiIPjmOfJeJbQ==
   dependencies:
     tslib "2.x"
 
@@ -329,10 +329,10 @@
     "@sapphire/utilities" "^2.0.1"
     tslib "^2.3.1"
 
-"@sapphire/plugin-subcommands@^2.0.0-next.23809.0":
-  version "2.0.0-next.23809.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.0.0-next.23809.0.tgz#983c6fba43253ee47e35e2722f0afe511c687f5a"
-  integrity sha512-b+QEgHCKeNA24kDNY/G155a0EjIgoy+LdEfyE2ycKa+LxP1Q+3GEjZPI9T6KNcJAEWtl83QHihuYzUebQXgGug==
+"@sapphire/plugin-subcommands@^2.0.0-next.8ffa299.0":
+  version "2.0.0-next.8ffa299.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.0.0-next.8ffa299.0.tgz#c992ffce0ea10ffdd12b65f58ac14ff8c0d2b43c"
+  integrity sha512-YLOSPvUSJiF9VWAW76P2x4r6ASisg9nAcZOiHWnCP8ibJiqGIz6d7IU88BWDNgbvSY1y+AxBX+iBVHu7t0dk7g==
   dependencies:
     tslib "^2.3.1"
 
@@ -446,10 +446,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
   integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
 
-"@types/node@^16.9.1":
-  version "16.9.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.1.tgz#0611b37db4246c937feef529ddcc018cf8e35708"
-  integrity sha512-QpLcX9ZSsq3YYUUnD3nFDY8H7wctAhQj/TFKL8Ya8v5fMm3CFXxo8zStsLAl780ltoYoo1WvKUVGBQK+1ifr7g==
+"@types/node@^16.9.2":
+  version "16.9.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.2.tgz#81f5a039d6ed1941f8cc57506c74e7c2b8fc64b9"
+  integrity sha512-ZHty/hKoOLZvSz6BtP1g7tc7nUeJhoCf3flLjh8ZEv1vFKBWHXcnMbJMyN/pftSljNyy0kNW/UqI3DccnBnZ8w==
 
 "@types/qs@*":
   version "6.9.7"
@@ -468,6 +468,11 @@
   dependencies:
     "@types/mime" "^1"
     "@types/node" "*"
+
+"@types/string-similarity@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@types/string-similarity/-/string-similarity-4.0.0.tgz#8cc03d5d1baad2b74530fe6c7d849d5768d391ad"
+  integrity sha512-dMS4S07fbtY1AILG/RhuwmptmzK1Ql8scmAebOTJ/8iBtK/KI17NwGwKzu1uipjj8Kk+3mfPxum56kKZE93mzQ==
 
 "@types/ws@^7.4.7":
   version "7.4.7"
@@ -656,10 +661,10 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-colorette@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.4.0.tgz#5190fbb87276259a86ad700bff2c6d6faa3fca40"
-  integrity sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g==
+colorette@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.2.tgz#f04cbc7f59ffc4f33ba4da0702dd4c8a68885d91"
+  integrity sha512-iO5Ycn8HKVhTGGKpwJtyzrrvOGI9YC4u4dppP5yKSGP47ApaZNwX7ne4PtgpTzq+JBwQh6FrdAfCSYTBQe1+FA==
 
 combined-stream@^1.0.8:
   version "1.0.8"
@@ -1787,6 +1792,11 @@ streamsearch@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-0.1.2.tgz#808b9d0e56fc273d809ba57338e929919a1a9f1a"
   integrity sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo=
+
+string-similarity@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/string-similarity/-/string-similarity-4.0.4.tgz#42d01ab0b34660ea8a018da8f56a3309bb8b2a5b"
+  integrity sha512-/q/8Q4Bl4ZKAPjj8WerIBJWALKkaPRfrvhfF8k/B23i4nzrlRj2/go1m90In7nG/3XDSbOo0+pu6RvCTM9RGMQ==
 
 string-width@^4.1.0, string-width@^4.2.0:
   version "4.2.2"
