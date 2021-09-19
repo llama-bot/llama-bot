@@ -3,7 +3,10 @@ declare namespace NodeJS {
 		[key: string]: string | undefined
 		TOKEN: string
 		TESTING: string
+		PREFIX_PROD: string
+		PREFIX_DEV: string
+
+		// default prefix currently being used
 		PREFIX: string
-		PREFIX_TESTING: string
 	}
 }

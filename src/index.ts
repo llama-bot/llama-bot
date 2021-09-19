@@ -7,8 +7,13 @@ dotenv.config()
 if (!process.env.TOKEN) throw Error("Token not found!")
 // set to default values if not defined already
 process.env.TESTING ??= "false"
-process.env.PREFIX ??= "-"
-process.env.PREFIX_TESTING ??= "b-"
+process.env.PREFIX_PROD ??= "-"
+process.env.PREFIX_DEV ??= "b-"
+
+process.env.PREFIX =
+	process.env.TESTING == "true"
+		? process.env.PREFIX_DEV
+		: process.env.PREFIX_PROD
 
 db.initialize()
 
@@ -16,10 +21,7 @@ const client = new SapphireClient({
 	baseUserDirectory: __dirname,
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
-	defaultPrefix:
-		process.env.TESTING == "true"
-			? process.env.PREFIX_TESTING
-			: process.env.PREFIX,
+	defaultPrefix: process.env.PREFIX,
 	intents: ["GUILDS", "GUILD_MESSAGES"],
 })
 
