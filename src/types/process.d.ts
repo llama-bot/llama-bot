@@ -1,6 +1,8 @@
 declare namespace NodeJS {
 	interface ProcessEnv {
 		[key: string]: string | undefined
+
+		// .env values
 		TOKEN: string
 		TESTING: string
 		PREFIX_PROD: string
