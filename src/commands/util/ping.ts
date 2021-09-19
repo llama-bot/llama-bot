@@ -3,7 +3,7 @@ import { ApplyOptions } from "@sapphire/decorators"
 import { Message, MessageEmbed } from "discord.js"
 
 @ApplyOptions<CommandOptions>({
-	aliases: ["p"],
+	aliases: ["p", "pong", "latency"],
 	description:
 		"Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
 })
