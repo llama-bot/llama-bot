@@ -8,4 +8,8 @@ declare module "@sapphire/framework" {
 	interface CommandOptions {
 		usage?: string
 	}
+
+	class SapphireClient {
+		startTime: number | undefined
+	}
 }

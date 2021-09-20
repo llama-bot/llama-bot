@@ -11,8 +11,9 @@ export class UserEvent extends Listener {
 	}
 
 	public run(): void {
+		this.container.client.startTime = Date.now()
+
 		this.printReady()
-		console.log()
 		this.printMode()
 		this.printStoreDebugInformation()
 	}
@@ -26,7 +27,8 @@ export class UserEvent extends Listener {
 				)}" (ID: ${yellow(
 					this.container.client.user?.id || "unknown bot ID"
 				)}) is Ready!`
-			)
+			),
+			"\n"
 		)
 	}
 
