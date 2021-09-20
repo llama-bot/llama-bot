@@ -1,4 +1,4 @@
-import { Command, CommandOptions, PieceContext } from "@sapphire/framework"
+import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Message, MessageEmbed } from "discord.js"
 
