@@ -3,7 +3,7 @@ import type {
 	ListenerOptions,
 	PieceContext,
 } from "@sapphire/framework"
-import { Command, Events, Listener, LogLevel } from "@sapphire/framework"
+import { Command, Events, Listener } from "@sapphire/framework"
 import type { Guild, User } from "discord.js"
 
 import { cyan } from "colorette"
