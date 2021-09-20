@@ -13,9 +13,10 @@ This is 101% accurate.`,
 export default class PPCommand extends Command {
 	async run(message: Message, args: Args) {
 		let description = ""
+		let users: { id: string; length: number }[] = []
 		let membersRaw = await args.repeat("string").catch(() => [])
 
-		if (!membersRaw) {
+		if (membersRaw.length <= 0) {
 			if (!message.member) {
 				message.channel.send({
 					embeds: [
@@ -33,13 +34,29 @@ export default class PPCommand extends Command {
 		for (const memberRaw of membersRaw) {
 			const numbersInString = memberRaw.match(/\d+/)
 			if (!numbersInString) continue
-			const memberID = numbersInString[0]
+			const memberIDStr = numbersInString[0]
+			if (!memberIDStr) continue
+			const memberID = parseInt(memberIDStr)
 			if (!memberID) continue
-			const userMention = Formatters.userMention(memberID)
-			const size = this.snowflakeToNumber(parseInt(memberID))
 
-			description += `**${userMention}'s size': (${size})**\n`
-			description += `8${"=".repeat(size)}D\n`
+			try {
+				users.push({
+					id: memberIDStr,
+					length: this.snowflakeToNumber(memberID),
+				})
+			} catch (e) {
+				continue
+			}
+		}
+
+		// sort users ascending by pp length
+		users.sort((prev, curr) => curr.length - prev.length)
+
+		for (const user of users) {
+			const userMention = Formatters.userMention(user.id)
+
+			description += `**${userMention}'s size': (${user.length})**\n`
+			description += `8${"=".repeat(user.length)}D\n`
 		}
 
 		message.channel.send({
