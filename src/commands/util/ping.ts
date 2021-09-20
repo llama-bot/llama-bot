@@ -11,43 +11,41 @@ export default class PingCommand extends Command {
 	async run(message: Message) {
 		const embedDescription = `**TR1GGERED** by ${message.author}`
 
-		message.channel
-			.send({
-				embeds: [
-					new MessageEmbed().setDescription(embedDescription).addFields(
-						{
-							name: "API Latency",
-							value: "...",
-							inline: true,
-						},
-						{
-							name: "Bot latency",
-							value: "...",
-							inline: true,
-						}
-					),
-				],
-			})
-			.then((msg) =>
-				msg.edit({
-					embeds: [
-						new MessageEmbed().setDescription(embedDescription).addFields(
-							{
-								name: "API latency",
-								value: `${
-									(msg.editedTimestamp || msg.createdTimestamp) -
-									(message.editedTimestamp || message.createdTimestamp)
-								}ms`,
-								inline: true,
-							},
-							{
-								name: "Bot latency",
-								value: `${Math.round(this.container.client.ws.ping)}ms`,
-								inline: true,
-							}
-						),
-					],
-				})
-			)
+		const response = await message.channel.send({
+			embeds: [
+				new MessageEmbed().setDescription(embedDescription).addFields(
+					{
+						name: "API Latency",
+						value: "...",
+						inline: true,
+					},
+					{
+						name: "Bot latency",
+						value: "...",
+						inline: true,
+					}
+				),
+			],
+		})
+
+		response.edit({
+			embeds: [
+				new MessageEmbed().setDescription(embedDescription).addFields(
+					{
+						name: "API latency",
+						value: `${
+							(response.editedTimestamp || response.createdTimestamp) -
+							(message.editedTimestamp || message.createdTimestamp)
+						}ms`,
+						inline: true,
+					},
+					{
+						name: "Bot latency",
+						value: `${Math.round(this.container.client.ws.ping)}ms`,
+						inline: true,
+					}
+				),
+			],
+		})
 	}
 }
