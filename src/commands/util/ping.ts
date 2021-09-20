@@ -9,7 +9,6 @@ import { Message, MessageEmbed } from "discord.js"
 })
 export default class PingCommand extends Command {
 	async run(message: Message) {
-		// compute as early as possible
 		const embedDescription = `**TR1GGERED** by ${message.author}`
 
 		message.channel
