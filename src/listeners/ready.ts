@@ -2,6 +2,8 @@ import type { ListenerOptions, PieceContext } from "@sapphire/framework"
 import { Listener, Store } from "@sapphire/framework"
 import { gray, yellow } from "colorette"
 
+import nekosClient from "nekos.life"
+
 export class UserEvent extends Listener {
 	public constructor(context: PieceContext, options?: ListenerOptions) {
 		super(context, {
@@ -11,6 +13,7 @@ export class UserEvent extends Listener {
 	}
 
 	public run(): void {
+		this.container.client.nekosClient = new nekosClient()
 		this.container.client.startTime = Date.now()
 
 		this.printReady()
