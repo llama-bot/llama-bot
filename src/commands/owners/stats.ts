@@ -1,7 +1,7 @@
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Message, MessageEmbed } from "discord.js"
-import os, { totalmem } from "os"
+import os from "os"
 
 import ownersOnlyPrecondition from "../../preconditions/OwnersOnly"
 
