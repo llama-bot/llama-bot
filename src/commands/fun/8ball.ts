@@ -21,7 +21,8 @@ export default class EightBallCommand extends Command {
 			embeds: [
 				new MessageEmbed()
 					.setTitle(response.response)
-					.setImage(response.url || ""),
+					.setImage(response.url || "")
+					.setFooter("powered by nekos.life"),
 			],
 		})
 	}

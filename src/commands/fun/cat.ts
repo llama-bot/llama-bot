@@ -1,6 +1,6 @@
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message } from "discord.js"
+import { Message, MessageEmbed } from "discord.js"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["kitty", "catText"],
@@ -8,8 +8,12 @@ import { Message } from "discord.js"
 })
 export default class CatCommand extends Command {
 	async run(message: Message) {
-		message.channel.send(
-			(await this.container.client.nekosClient.sfw.catText()).cat
-		)
+		message.channel.send({
+			embeds: [
+				new MessageEmbed()
+					.setTitle((await this.container.client.nekosClient.sfw.catText()).cat)
+					.setFooter("powered by nekos.life"),
+			],
+		})
 	}
 }

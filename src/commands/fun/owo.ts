@@ -14,15 +14,17 @@ export default class CatCommand extends Command {
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed().setDescription(
-					`**${Formatters.userMention(message.author.id)} says:**\n\n${
-						(
-							await this.container.client.nekosClient.sfw.OwOify({
-								text: input,
-							})
-						).owo
-					}`
-				),
+				new MessageEmbed()
+					.setDescription(
+						`**${Formatters.userMention(message.author.id)} says:**\n\n${
+							(
+								await this.container.client.nekosClient.sfw.OwOify({
+									text: input,
+								})
+							).owo
+						}`
+					)
+					.setFooter("powered by nekos.life"),
 			],
 		})
 	}

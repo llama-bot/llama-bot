@@ -16,9 +16,7 @@ export default class FactCommand extends Command {
 					.setDescription(
 						(await this.container.client.nekosClient.sfw.fact()).fact
 					)
-					.setFooter(
-						`Requested by ${message.author.tag} (${message.author.id})`
-					),
+					.setFooter("powered by nekos.life"),
 			],
 		})
 	}
