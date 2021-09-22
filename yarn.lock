@@ -329,13 +329,6 @@
     "@sapphire/utilities" "^2.0.1"
     tslib "^2.3.1"
 
-"@sapphire/plugin-subcommands@^2.0.0-next.d810c56.0":
-  version "2.0.0-next.d810c56.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.0.0-next.d810c56.0.tgz#7e171b54830ea9e61394c3e61d227757d6c1a869"
-  integrity sha512-ieKxkJWENnlWcjVn8KJ9IOuzFmtSqdp8/0d72jrnokQ6hYs7z+0nAOXZrO9HRBamcyJT2mY46SR0zfjmO6rUTQ==
-  dependencies:
-    tslib "^2.3.1"
-
 "@sapphire/ratelimits@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@sapphire/ratelimits/-/ratelimits-2.0.1.tgz#e2195d6d93cbb19ed4f54f5078973a7c60e1a6bd"
