@@ -5,6 +5,7 @@ import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 import { formatDate, timeDiff } from "../../util"
 
 @ApplyOptions<CommandOptions>({
+	aliases: ["s"],
 	description: "Calculates when a discord ID (snowflake) was created.",
 })
 export default class SnowflakeCommand extends Command {
@@ -27,22 +28,13 @@ export default class SnowflakeCommand extends Command {
 		try {
 			const now = message.editedTimestamp || message.createdTimestamp
 			const creationDate = SnowflakeUtil.deconstruct(input).date
-			const formattedDiffDate = timeDiff(creationDate.getTime(), now)
 
 			message.channel.send({
 				embeds: [
-					new MessageEmbed().addFields(
-						{
-							name: "Snowflake",
-							value: input,
-							inline: true,
-						},
-						{
-							name: "Creation Date (UTC)",
-							value: `${formatDate(creationDate)} (${formattedDiffDate} ago)`,
-							inline: true,
-						}
-					),
+					new MessageEmbed()
+						.setTitle(input)
+						.addField("Creation Date (UTC)", formatDate(creationDate))
+						.addField("Age", timeDiff(creationDate.getTime(), now)),
 				],
 			})
 		} catch (e) {
