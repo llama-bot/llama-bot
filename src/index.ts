@@ -1,5 +1,7 @@
 import { SapphireClient } from "@sapphire/framework"
 import dotenv from "dotenv"
+import nekosClient from "nekos.life"
+
 import db from "./db"
 
 dotenv.config()
@@ -24,6 +26,8 @@ const client = new SapphireClient({
 	defaultPrefix: process.env.PREFIX,
 	intents: ["GUILDS", "GUILD_MESSAGES"],
 })
+
+client.nekosClient = new nekosClient()
 
 // start the  bot
 try {
