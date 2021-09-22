@@ -10,10 +10,10 @@
 		"build": "rm -rf ./build/ && tsc"
 	},
 	"dependencies": {
-		"@sapphire/decorators": "^3.0.0-next.a316abca.0",
+		"@sapphire/decorators": "^3.0.0-next.8f9e6156.0",
 		"@sapphire/framework": "^2.0.0-next.71c18830.0",
-		"@sapphire/plugin-subcommands": "^2.0.0-next.8ffa299.0",
-		"colorette": "^2.0.2",
+		"@sapphire/plugin-subcommands": "^2.0.0-next.d810c56.0",
+		"colorette": "^2.0.5",
 		"discord.js": "^13.1.0",
 		"dotenv": "^10.0.0",
 		"firebase-admin": "^9.11.1",
@@ -21,7 +21,7 @@
 		"string-similarity": "^4.0.4"
 	},
 	"devDependencies": {
-		"@types/node": "^16.9.2",
+		"@types/node": "^16.9.6",
 		"@types/string-similarity": "^4.0.0",
 		"eslint": "^7.32.0",
 		"tslint-config-prettier": "^1.18.0",

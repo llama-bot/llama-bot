@@ -277,10 +277,10 @@
   resolved "https://registry.yarnpkg.com/@sapphire/async-queue/-/async-queue-1.1.4.tgz#ae431310917a8880961cebe8e59df6ffa40f2957"
   integrity sha512-fFrlF/uWpGOX5djw5Mu2Hnnrunao75WGey0sP0J3jnhmrJ5TAPzHYOmytD5iN/+pMxS+f+u/gezqHa9tPhRHEA==
 
-"@sapphire/decorators@^3.0.0-next.a316abca.0":
-  version "3.0.0-next.a316abca.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/decorators/-/decorators-3.0.0-next.a316abca.0.tgz#112e21aca46d7b2834ee1bb0d172e48cd0bf896d"
-  integrity sha512-8pR0fB6OVzOLvPtK5nlYoBKRl3B2FBc6wUT1L4g05bMjN0UsY6HG/64afI/P3M/aCz25/M1emXiIPjmOfJeJbQ==
+"@sapphire/decorators@^3.0.0-next.8f9e6156.0":
+  version "3.0.0-next.8f9e6156.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/decorators/-/decorators-3.0.0-next.8f9e6156.0.tgz#2de948967c8733e89b7672ff6f439740352de7d9"
+  integrity sha512-Bt0KGV/yNWK32FLrL+euQBNI3A/FrAaD59uT9DQs6EOOWSDXRrTDrqXJeIGQw/OdtG2j1W6TiqxOHklFK1FvxQ==
   dependencies:
     tslib "2.x"
 
@@ -329,10 +329,10 @@
     "@sapphire/utilities" "^2.0.1"
     tslib "^2.3.1"
 
-"@sapphire/plugin-subcommands@^2.0.0-next.8ffa299.0":
-  version "2.0.0-next.8ffa299.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.0.0-next.8ffa299.0.tgz#c992ffce0ea10ffdd12b65f58ac14ff8c0d2b43c"
-  integrity sha512-YLOSPvUSJiF9VWAW76P2x4r6ASisg9nAcZOiHWnCP8ibJiqGIz6d7IU88BWDNgbvSY1y+AxBX+iBVHu7t0dk7g==
+"@sapphire/plugin-subcommands@^2.0.0-next.d810c56.0":
+  version "2.0.0-next.d810c56.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.0.0-next.d810c56.0.tgz#7e171b54830ea9e61394c3e61d227757d6c1a869"
+  integrity sha512-ieKxkJWENnlWcjVn8KJ9IOuzFmtSqdp8/0d72jrnokQ6hYs7z+0nAOXZrO9HRBamcyJT2mY46SR0zfjmO6rUTQ==
   dependencies:
     tslib "^2.3.1"
 
@@ -446,10 +446,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
   integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
 
-"@types/node@^16.9.2":
-  version "16.9.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.2.tgz#81f5a039d6ed1941f8cc57506c74e7c2b8fc64b9"
-  integrity sha512-ZHty/hKoOLZvSz6BtP1g7tc7nUeJhoCf3flLjh8ZEv1vFKBWHXcnMbJMyN/pftSljNyy0kNW/UqI3DccnBnZ8w==
+"@types/node@^16.9.6":
+  version "16.9.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.9.6.tgz#040a64d7faf9e5d9e940357125f0963012e66f04"
+  integrity sha512-YHUZhBOMTM3mjFkXVcK+WwAcYmyhe1wL4lfqNtzI0b3qAy7yuSetnM7QJazgE5PFmgVTNGiLOgRFfJMqW7XpSQ==
 
 "@types/qs@*":
   version "6.9.7"
@@ -661,10 +661,10 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-colorette@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.2.tgz#f04cbc7f59ffc4f33ba4da0702dd4c8a68885d91"
-  integrity sha512-iO5Ycn8HKVhTGGKpwJtyzrrvOGI9YC4u4dppP5yKSGP47ApaZNwX7ne4PtgpTzq+JBwQh6FrdAfCSYTBQe1+FA==
+colorette@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.5.tgz#e9257d0a938e2340d3d4942bde308b1016721c84"
+  integrity sha512-rPmg56Y2iDrBBoQN9A8TwkXpIKtk0dWo2PZvIK1AcY6SLdIbgg0mtLm+o0MQFHZhiMQ6cVgL+wkTEO9XPPM4Wg==
 
 combined-stream@^1.0.8:
   version "1.0.8"
