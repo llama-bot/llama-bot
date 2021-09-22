@@ -1,4 +1,4 @@
-export default function timeDiff(startTime: number, endTime: number): string {
+export default function (startTime: number, endTime: number): string {
 	// https://stackoverflow.com/a/13904120/12979111
 
 	let diff = (endTime - startTime) / 1000

@@ -1,4 +1,4 @@
-export default function getFunctionByName(functionName: string, context: any) {
+export default function (functionName: string, context: any) {
 	const namespaces = functionName.split(".")
 	const functionToExecute = namespaces.pop()
 
