@@ -1,8 +1,6 @@
 import { createFunctionPrecondition } from "@sapphire/decorators"
-import { SapphireClient } from "@sapphire/framework"
-import { Message, MessageEmbed } from "discord.js"
-
-import type { Snowflake } from "discord-api-types"
+import { Message } from "discord.js"
+import { Snowflake } from "discord-api-types"
 
 export default function ownersOnly() {
 	// IDs of users who can run owners only commands
