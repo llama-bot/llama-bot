@@ -1,15 +1,12 @@
+import { ApplyOptions } from "@sapphire/decorators"
 import type { Events, ListenerOptions, PieceContext } from "@sapphire/framework"
 import { Listener, Store } from "@sapphire/framework"
 import { gray, yellow } from "colorette"
 
+@ApplyOptions<ListenerOptions>({
+	once: true,
+})
 export class UserEvent extends Listener<typeof Events.ClientReady> {
-	public constructor(context: PieceContext, options?: ListenerOptions) {
-		super(context, {
-			...options,
-			once: true,
-		})
-	}
-
 	public run(): void {
 		this.container.client.startTime = Date.now()
 
