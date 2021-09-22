@@ -1,8 +1,8 @@
-import type { ListenerOptions, PieceContext } from "@sapphire/framework"
+import type { Events, ListenerOptions, PieceContext } from "@sapphire/framework"
 import { Listener, Store } from "@sapphire/framework"
 import { gray, yellow } from "colorette"
 
-export class UserEvent extends Listener {
+export class UserEvent extends Listener<typeof Events.ClientReady> {
 	public constructor(context: PieceContext, options?: ListenerOptions) {
 		super(context, {
 			...options,
