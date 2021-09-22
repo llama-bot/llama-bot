@@ -1,13 +1,4 @@
-function countDays(startDate: number, endDate: number): number {
-	return Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))
-}
-
-function formatDate(date: Date): string {
-	// YYYY-MM-DD hh:mm:ss
-	return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
-}
-
-function timeDiff(startTime: number, endTime: number): string {
+export default function timeDiff(startTime: number, endTime: number): string {
 	// https://stackoverflow.com/a/13904120/12979111
 
 	let diff = (endTime - startTime) / 1000
@@ -31,5 +22,3 @@ function timeDiff(startTime: number, endTime: number): string {
 		(secs ? `${secs} seconds` : "")
 	)
 }
-
-export { countDays, formatDate, timeDiff }
