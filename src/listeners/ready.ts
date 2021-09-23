@@ -37,12 +37,13 @@ export class UserEvent extends Listener<typeof Events.ClientReady> {
 	}
 
 	private printStoreDebugInformation(): void {
-		const { client, logger } = this.container
+		const { client } = this.container
 		const stores = [...client.stores.values()]
 		const last = stores.pop()!
 
-		for (const store of stores) logger.info(this.styleStore(store, false))
-		logger.info(this.styleStore(last, true))
+		for (const store of stores) console.log(this.styleStore(store, false))
+
+		console.log(this.styleStore(last, true))
 	}
 
 	private styleStore(store: Store<any>, last: boolean): string {
