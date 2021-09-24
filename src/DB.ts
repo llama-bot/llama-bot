@@ -7,20 +7,23 @@
 import { Snowflake } from "discord-api-types"
 import admin from "firebase-admin"
 
+import { Settings, Servers, ServerData } from "./types/llamaBot"
+
 export default class {
 	firestoreDB = admin.firestore()
-	settings: LlamaBotSettings = {}
-	servers: LlamaBotServers = {}
 
-	async fetchSettings() {
-		const doc = await this.firestoreDB
+	settings: Settings = {}
+	servers: Servers = {}
+
+	async fetchSettings(): Promise<Settings> {
+		return this.firestoreDB
 			.collection("llama-bot")
 			.doc("settings")
 			.get()
-		this.settings = doc.data() as LlamaBotSettings
+			.then((doc) => doc.data() as Settings)
 	}
 
-	async fetchServerData(serverSnowflake: Snowflake) {
+	async fetchServerData(serverSnowflake: Snowflake): Promise<ServerData> {
 		const result: { [key: string]: FirebaseFirestore.DocumentData } = {}
 
 		const snapshot = await this.firestoreDB
@@ -33,6 +36,6 @@ export default class {
 			result[doc.id] = doc.data()
 		})
 
-		this.servers[serverSnowflake] = result as unknown as LlamaBotServerData
+		return (this.servers[serverSnowflake] = result as unknown as ServerData)
 	}
 }

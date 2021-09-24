@@ -1,9 +1,9 @@
-interface LlamaBotSettings {
+export interface Settings {
 	clearEmojis?: string[]
 	quotes?: string[]
 }
 
-interface LlamaBotServerData {
+export interface ServerData {
 	settings: {
 		enabledCogs: string[]
 	}
@@ -14,6 +14,6 @@ interface LlamaBotServerData {
 	}
 }
 
-interface LlamaBotServers {
-	[key: string]: LlamaBotServerData
+export interface Servers {
+	[key: string]: ServerData
 }
