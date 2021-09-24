@@ -1,8 +1,14 @@
 import { SapphireClient } from "@sapphire/framework"
 import dotenv from "dotenv"
 import nekosClient from "nekos.life"
+import admin from "firebase-admin"
 
-import db from "./db"
+import serviceAccountKey from "./secret/firebase-adminsdk.json"
+import DB from "./DB"
+
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
+})
 
 dotenv.config()
 // do not start the bot if token is not found
@@ -17,8 +23,6 @@ process.env.PREFIX =
 		? process.env.PREFIX_DEV
 		: process.env.PREFIX_PROD
 
-db.initialize()
-
 const client = new SapphireClient({
 	baseUserDirectory: __dirname,
 	caseInsensitiveCommands: true,
@@ -28,6 +32,7 @@ const client = new SapphireClient({
 })
 
 client.nekosClient = new nekosClient()
+client.db = new DB()
 
 // start the  bot
 try {

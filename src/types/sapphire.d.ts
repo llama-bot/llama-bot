@@ -1,6 +1,8 @@
 import "@sapphire/framework"
 import NekoClient from "nekos.life"
 
+import DB from "../DB"
+
 declare module "@sapphire/framework" {
 	export abstract class Command {
 		usage: string
@@ -13,5 +15,6 @@ declare module "@sapphire/framework" {
 	class SapphireClient {
 		startTime: number | undefined
 		nekosClient: NekoClient
+		db: DB
 	}
 }
