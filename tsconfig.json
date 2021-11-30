@@ -1,23 +1,18 @@
 {
 	"compilerOptions": {
-		"experimentalDecorators": true,
-
-		"target": "es6",
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"lib": ["es6"],
-		"outDir": "build",
+		"outDir": "dist",
 		"rootDir": "src",
 
-		"allowJs": true,
+		"moduleResolution": "Node",
+		"target": "ES6",
+		"module": "CommonJS",
+		"lib": ["ES6"],
+
+		"experimentalDecorators": true,
 		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
 		"noFallthroughCasesInSwitch": true,
-		"noImplicitAny": true,
 		"resolveJsonModule": true,
-		"strict": true,
-		"skipLibCheck": true
-	},
-	"include": ["src/**/*"]
+		"strict": true
+	}
 }

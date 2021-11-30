@@ -2,12 +2,14 @@ import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters, Message, MessageEmbed } from "discord.js"
 
+import { globalObject } from "../.."
+
 @ApplyOptions<CommandOptions>({
 	aliases: ["owoify"],
 	description: "OwOifies youw message OwO",
 })
 export default class CatCommand extends Command {
-	async run(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args) {
 		message.channel.sendTyping()
 
 		const input = [...(await args.repeat("string").catch(() => ""))].join(" ")
@@ -18,7 +20,7 @@ export default class CatCommand extends Command {
 					.setDescription(
 						`**${Formatters.userMention(message.author.id)} says:**\n\n${
 							(
-								await this.container.client.nekosClient.sfw.OwOify({
+								await globalObject.nekosClient.sfw.OwOify({
 									text: input,
 								})
 							).owo

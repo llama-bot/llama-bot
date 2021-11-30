@@ -1,6 +1,6 @@
+import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 
 import { formatDate, timeDiff } from "../../util"
 
@@ -9,7 +9,7 @@ import { formatDate, timeDiff } from "../../util"
 	description: "Calculates when a discord ID (snowflake) was created.",
 })
 export default class SnowflakeCommand extends Command {
-	async run(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args) {
 		let input: string
 
 		try {

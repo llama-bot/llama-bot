@@ -10,7 +10,7 @@ import ownersOnlyPrecondition from "../../preconditions/OwnersOnly"
 })
 export default class StatsCommand extends Command {
 	@ownersOnlyPrecondition()
-	async run(message: Message) {
+	async messageRun(message: Message) {
 		const cpuData = os.cpus()
 		const threadCount = cpuData.length
 		const averageCPUSpeed =

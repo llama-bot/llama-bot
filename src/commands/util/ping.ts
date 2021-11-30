@@ -8,7 +8,7 @@ import { Message, MessageEmbed } from "discord.js"
 		"Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
 })
 export default class PingCommand extends Command {
-	async run(message: Message) {
+	async messageRun(message: Message) {
 		const embedDescription = `**TR1GGERED** by ${message.author}`
 
 		const response = await message.channel.send({

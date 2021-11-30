@@ -12,16 +12,17 @@ import {
 } from "discord.js"
 
 import { countDays, formatDate, timeDiff } from "../../util"
+import { globalObject } from "../.."
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["a", "u", "uptime"],
 	description: "Shows basic information about the bot.",
 })
 export default class AboutCommand extends Command {
-	async run(message: Message) {
+	async messageRun(message: Message) {
 		// compute uptime as early as possible
 		const now = message.editedTimestamp || message.createdTimestamp
-		const startTime = this.container.client.startTime
+		const startTime = globalObject.startTime
 		if (!startTime || !this.container.client.id)
 			return this.failedToGetStartTime(message)
 

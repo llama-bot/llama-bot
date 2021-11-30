@@ -8,7 +8,7 @@ import { Message, MessageEmbed } from "discord.js"
 		"does the annoying Karen clap. Does not work with external emojis.",
 })
 export default class ClapifyCommand extends Command {
-	async run(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args) {
 		const inputs = await args.repeat("string").then(() => [])
 
 		if (!inputs)

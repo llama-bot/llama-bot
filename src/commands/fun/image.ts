@@ -3,6 +3,7 @@ import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters, Message, MessageEmbed } from "discord.js"
 
 import { isChannelNSFW, caseInsensitiveIndexOf } from "../../util"
+import { globalObject } from "../.."
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["i", "img", "images"],
@@ -10,18 +11,18 @@ import { isChannelNSFW, caseInsensitiveIndexOf } from "../../util"
 })
 export default class ImageCommand extends Command {
 	nsfwOptions: string[] = Object.getOwnPropertyNames(
-		this.container.client.nekosClient.nsfw
+		globalObject.nekosClient.nsfw
 	)
 
 	sfwOptions: string[] = Object.getOwnPropertyNames(
-		this.container.client.nekosClient.sfw
+		globalObject.nekosClient.sfw
 	).filter(
 		(elem) =>
 			// these options do not have the url attribute
 			!["why", "catText", "OwOify", "8Ball", "fact", "spoiler"].includes(elem)
 	)
 
-	async run(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args) {
 		const option1 = await args.pick("string").catch(() => "")
 		const option2 = await args.pick("string").catch(() => "")
 

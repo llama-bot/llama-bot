@@ -3,12 +3,14 @@ import type { Events, ListenerOptions, PieceContext } from "@sapphire/framework"
 import { Listener, Store } from "@sapphire/framework"
 import { gray, yellow } from "colorette"
 
+import { globalObject } from ".."
+
 @ApplyOptions<ListenerOptions>({
 	once: true,
 })
 export class UserEvent extends Listener<typeof Events.ClientReady> {
 	public run(): void {
-		this.container.client.startTime = Date.now()
+		globalObject.startTime = Date.now()
 
 		this.printReady()
 		this.printMode()

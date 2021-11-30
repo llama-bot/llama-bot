@@ -11,7 +11,7 @@ Longest length:  30 (\`8==============================D\`).
 This is 101% accurate.`,
 })
 export default class PPCommand extends Command {
-	async run(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args) {
 		let description = ""
 		let users: { id: string; length: number }[] = []
 		let membersRaw = await args.repeat("string").catch(() => [])
