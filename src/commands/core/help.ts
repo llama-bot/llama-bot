@@ -6,7 +6,6 @@ import {
 	CommandStore,
 } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-
 import stringSimilarity from "string-similarity"
 
 type QueryType = "empty" | "command" | "category" | "unknown"
@@ -15,16 +14,17 @@ type QueryType = "empty" | "command" | "category" | "unknown"
 	aliases: ["h"],
 	description:
 		"Shows list of helpful information about a command or a command category.",
-	usage: `> ${process.env.PREFIX}{command} <cog | command | None>
+})
+export default class HelpCommand extends Command {
+	usage = `> ${process.env.PREFIX}{command} <cog | command | None>
 ex:
 List cogs:
 > ${process.env.PREFIX}{command}
 List commands in the \`core\` cog:
 > ${process.env.PREFIX}{command} core
 Shows info about \`ping\` command:
-> ${process.env.PREFIX}{command} ping`,
-})
-export default class HelpCommand extends Command {
+> ${process.env.PREFIX}{command} ping`
+
 	commands: CommandStore = this.container.client.stores.get("commands")
 
 	// lower case names of categories
