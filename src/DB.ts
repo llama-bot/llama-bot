@@ -1,11 +1,9 @@
 /**
- *  Firestore database interface for the llama bot.
- *  More information about firestore can be found here:
- *  https://firebase.google.com/docs/firestore
+ * @file Firestore database interface for the llama bot.
  */
 
-import { Snowflake } from "discord-api-types"
 import admin from "firebase-admin"
+import { Snowflake } from "discord-api-types"
 
 import { Settings, Servers, ServerData } from "./types/llamaBot"
 

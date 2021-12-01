@@ -2,28 +2,12 @@ import { SapphireClient } from "@sapphire/framework"
 import dotenv from "dotenv"
 import nekosClient from "nekos.life"
 import admin from "firebase-admin"
-import { start } from "pretty-error"
+import { start as startPrettyError } from "pretty-error"
 
 import serviceAccountKey from "./secret/firebase-adminsdk.json"
 import DB from "./DB"
 
-start()
-
-admin.initializeApp({
-	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
-})
-
-interface GlobalObject {
-	startTime: number | undefined
-	nekosClient: nekosClient
-	db: DB
-}
-
-const globalObject: GlobalObject = {
-	startTime: 0,
-	nekosClient: new nekosClient(),
-	db: new DB(),
-}
+startPrettyError()
 
 dotenv.config()
 // do not start the bot if token is not found
@@ -39,7 +23,17 @@ process.env.PREFIX =
 		? process.env.PREFIX_DEV
 		: process.env.PREFIX_PROD
 
-const client = new SapphireClient({
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
+})
+
+export const globalObject = {
+	startTime: 0,
+	nekosClient: new nekosClient(),
+	db: new DB(),
+}
+
+export const client = new SapphireClient({
 	baseUserDirectory: __dirname,
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
@@ -53,5 +47,3 @@ try {
 } catch (error) {
 	client.destroy()
 }
-
-export { globalObject }
