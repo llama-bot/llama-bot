@@ -18,6 +18,19 @@ type sfwOptionsType = Exclude<
 	description: "Shows some good images",
 })
 export default class ImageCommand extends Command {
+	usage = `> \`${process.env.PREFIX}image <image category> <image type>\`
+
+image category:
+- nsfw & sfw (can be shortened to \`n\` and \`s\`)
+
+image type:
+- Use the \`${process.env.PREFIX}image list\` command to list available options.
+
+e.g.
+
+> \`${process.env.PREFIX}image sfw pat\`
+`
+
 	nsfwOptions: nsfwOptionsType[] = Object.getOwnPropertyNames(
 		globalObject.nekosClient.nsfw
 	) as nsfwOptionsType[]
@@ -30,7 +43,7 @@ export default class ImageCommand extends Command {
 			!["why", "catText", "OwOify", "8Ball", "fact", "spoiler"].includes(elem)
 	) as sfwOptionsType[]
 
-	async messageRun(message: Message, args: Args) {
+	async messageRun(message: Message, args: Args): Promise<void> {
 		const option1 = await args.pick("string").catch(() => "")
 		const option2 = await args.pick("string").catch(() => "")
 
@@ -144,6 +157,10 @@ export default class ImageCommand extends Command {
 		message.channel.send({
 			embeds: [
 				new MessageEmbed().setTitle("Image Options").addFields(
+					{
+						name: "Usage",
+						value: this.usage,
+					},
 					{
 						name: "NSFW",
 						value: `\`${this.nsfwOptions.join("`, `")}\``,
