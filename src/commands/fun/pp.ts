@@ -13,7 +13,7 @@ This is 101% accurate.`,
 export default class PPCommand extends Command {
 	async messageRun(message: Message, args: Args) {
 		let description = ""
-		let users: { id: string; length: number }[] = []
+		const users: { id: string; length: number }[] = []
 		let membersRaw = await args.repeat("string").catch(() => [])
 
 		if (membersRaw.length <= 0) {

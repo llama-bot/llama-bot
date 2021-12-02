@@ -1,6 +1,12 @@
 import { ApplyOptions } from "@sapphire/decorators"
-import type { Events, ListenerOptions, PieceContext } from "@sapphire/framework"
-import { Listener, Store } from "@sapphire/framework"
+import {
+	Events,
+	Listener,
+	ListenerOptions,
+	Piece,
+	PieceContext,
+	Store,
+} from "@sapphire/framework"
 import { gray, yellow } from "colorette"
 
 import { globalObject } from ".."
@@ -8,7 +14,11 @@ import { globalObject } from ".."
 @ApplyOptions<ListenerOptions>({
 	once: true,
 })
-export class UserEvent extends Listener<typeof Events.ClientReady> {
+export class Ready extends Listener<typeof Events.ClientReady> {
+	constructor(context: PieceContext) {
+		super(context, { once: true })
+	}
+
 	public run(): void {
 		globalObject.startTime = Date.now()
 
@@ -21,9 +31,9 @@ export class UserEvent extends Listener<typeof Events.ClientReady> {
 		// prints: botusername#discriminator (botuserid) is Ready!
 		console.log(
 			gray(
-				`"${yellow(
+				`${yellow(
 					this.container.client.user?.tag || "unknown bot name"
-				)}" (ID: ${yellow(
+				)} (ID: ${yellow(
 					this.container.client.user?.id || "unknown bot ID"
 				)}) is Ready!`
 			),
@@ -39,16 +49,11 @@ export class UserEvent extends Listener<typeof Events.ClientReady> {
 	}
 
 	private printStoreDebugInformation(): void {
-		const { client } = this.container
-		const stores = [...client.stores.values()]
-		const last = stores.pop()!
-
-		for (const store of stores) console.log(this.styleStore(store, false))
-
-		console.log(this.styleStore(last, true))
+		for (const store of this.container.client.stores.values())
+			console.log(this.styleStore(store))
 	}
 
-	private styleStore(store: Store<any>, last: boolean): string {
+	private styleStore(store: Store<Piece>): string {
 		return gray(
 			`Loaded ${yellow(store.size.toString().padEnd(3, " "))} ${store.name}.`
 		)

@@ -2,5 +2,8 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
-	"cSpell.words": ["clapify", "firestore", "Neko", "nekos"]
+	"cSpell.words": ["clapify", "firestore", "Neko", "nekos"],
+	"[ignore]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	}
 }

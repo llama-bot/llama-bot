@@ -1,6 +1,6 @@
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message, MessageEmbed } from "discord.js"
+import { Message } from "discord.js"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["l"],
@@ -17,6 +17,7 @@ export default class LlamaCommand extends Command {
 	// self.quote_current_index: dict[int, int] = dict()
 
 	async messageRun(message: Message) {
+		console.log(message.content)
 		// server_snowflake: int = ctx.guild.id
 		// # if server index array is not initialized
 		// if server_snowflake not in self.quote_indices:

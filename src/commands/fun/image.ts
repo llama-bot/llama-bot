@@ -1,26 +1,34 @@
 import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters, Message, MessageEmbed } from "discord.js"
+import NekoClient from "nekos.life"
+import { FunctionKeys, $PropertyType } from "utility-types"
 
 import { isChannelNSFW, caseInsensitiveIndexOf } from "../../util"
 import { globalObject } from "../.."
+
+type nsfwOptionsType = FunctionKeys<$PropertyType<NekoClient, "nsfw">>
+type sfwOptionsType = Exclude<
+	FunctionKeys<$PropertyType<NekoClient, "sfw">>,
+	"why" | "catText" | "OwOify" | "8Ball" | "fact" | "spoiler"
+>
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["i", "img", "images"],
 	description: "Shows some good images",
 })
 export default class ImageCommand extends Command {
-	nsfwOptions: string[] = Object.getOwnPropertyNames(
+	nsfwOptions: nsfwOptionsType[] = Object.getOwnPropertyNames(
 		globalObject.nekosClient.nsfw
-	)
+	) as nsfwOptionsType[]
 
-	sfwOptions: string[] = Object.getOwnPropertyNames(
+	sfwOptions: sfwOptionsType[] = Object.getOwnPropertyNames(
 		globalObject.nekosClient.sfw
 	).filter(
 		(elem) =>
-			// these options do not have the url attribute
+			// the return values for these options do not have the url attribute
 			!["why", "catText", "OwOify", "8Ball", "fact", "spoiler"].includes(elem)
-	)
+	) as sfwOptionsType[]
 
 	async messageRun(message: Message, args: Args) {
 		const option1 = await args.pick("string").catch(() => "")
@@ -64,8 +72,7 @@ export default class ImageCommand extends Command {
 					return
 				}
 
-				// @ts-ignore
-				const result = await this.container.client.nekosClient.nsfw[
+				const result = await globalObject.nekosClient.nsfw[
 					this.nsfwOptions[nsfwIndex]
 				]()
 
@@ -81,8 +88,7 @@ export default class ImageCommand extends Command {
 			const sfwIndex = caseInsensitiveIndexOf(this.sfwOptions, option2)
 
 			if (sfwIndex >= 0) {
-				// @ts-ignore
-				const result = await this.container.client.nekosClient.sfw[
+				const result = await globalObject.nekosClient.sfw[
 					this.sfwOptions[sfwIndex]
 				]()
 				this.sendImage(message, result.url)

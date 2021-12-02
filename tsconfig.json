@@ -8,11 +8,14 @@
 		"module": "CommonJS",
 		"lib": ["ES6"],
 
-		"experimentalDecorators": true,
-		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"experimentalDecorators": true,
 		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
 		"resolveJsonModule": true,
 		"strict": true
-	}
+	},
+	"include": ["src"],
+	"exclude": ["_/"]
 }

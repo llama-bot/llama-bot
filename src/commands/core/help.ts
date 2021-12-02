@@ -8,7 +8,18 @@ import {
 import { ApplyOptions } from "@sapphire/decorators"
 import stringSimilarity from "string-similarity"
 
-type QueryType = "empty" | "command" | "category" | "unknown"
+enum QueryType {
+	empty = "empty",
+	command = "command",
+	category = "category",
+	unknown = "unknown",
+}
+
+type CategorizeQueryReturn =
+	| { queryType: QueryType.empty }
+	| { queryType: QueryType.command; command: Command }
+	| { queryType: QueryType.category }
+	| { queryType: QueryType.unknown }
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["h"],
@@ -32,6 +43,7 @@ Shows info about \`ping\` command:
 
 	async messageRun(message: Message, args: Args): Promise<void> {
 		// todo: find ways to set it on command initialization
+		// todo: also prevent command from having same name as command category
 		if (this.lowerCaseCategoryNames.length <= 0) {
 			this.lowerCaseCategoryNames = this.commands.categories.map((elem) =>
 				elem.toLowerCase()
@@ -39,36 +51,40 @@ Shows info about \`ping\` command:
 		}
 
 		const query: string = await args.pick("string").catch(() => "")
-		const lowerCaseQuery = query.toLowerCase()
-		const [queryType, command] = this.categorizeQuery(lowerCaseQuery)
+		const queryCategory = this.categorizeQuery(query)
 
-		if (queryType == "empty") {
-			this.sendDefaultHelpMessage(message)
-		} else if (queryType == "command") {
-			this.sendCommandHelpMessage(message, command!)
-		} else if (queryType == "category") {
-			this.sendCommandCategoryHelpMessage(message, query)
-		} else {
-			this.sendCommandNotFoundMessage(message, query)
+		switch (queryCategory.queryType) {
+			case QueryType.empty:
+				this.sendDefaultHelpMessage(message)
+				break
+			case QueryType.command:
+				this.sendCommandHelpMessage(message, queryCategory.command)
+				break
+			case QueryType.category:
+				this.sendCategoryHelpMessage(message, query)
+				break
+			default:
+				this.sendCommandNotFoundMessage(message, query)
+				break
 		}
 	}
 
-	categorizeQuery(lowerCaseQuery: string): [QueryType, Command?] {
-		if (!lowerCaseQuery) return ["empty"]
+	categorizeQuery(input: string): CategorizeQueryReturn {
+		const query = input.toLowerCase()
 
-		if (this.lowerCaseCategoryNames.includes(lowerCaseQuery))
-			return ["category"]
+		if (!query) return { queryType: QueryType.empty }
+
+		if (this.lowerCaseCategoryNames.includes(query))
+			return { queryType: QueryType.category }
 
 		const command = this.commands.find(
 			(command: Command, key: string) =>
-				key.toLowerCase() == lowerCaseQuery ||
-				command.aliases
-					.map((elem) => elem.toLowerCase())
-					.includes(lowerCaseQuery)
+				key.toLowerCase() == query ||
+				command.aliases.map((elem) => elem.toLowerCase()).includes(query)
 		)
-		if (command) return ["command", command]
+		if (command) return { queryType: QueryType.command, command }
 
-		return ["unknown"]
+		return { queryType: QueryType.unknown }
 	}
 
 	sendDefaultHelpMessage(message: Message): void {
@@ -78,8 +94,8 @@ Shows info about \`ping\` command:
 				`Type \`${process.env.PREFIX}help <command | category>\` to get more information about a command or a command category.`
 			)
 
-		this.commands.categories.forEach((elem) =>
-			helpEmbed.addField(elem, "category description", true)
+		this.lowerCaseCategoryNames.forEach((elem) =>
+			helpEmbed.addField(elem, "this command category is for something.", true)
 		)
 
 		message.channel.send({
@@ -103,11 +119,17 @@ Shows info about \`ping\` command:
 		})
 	}
 
-	sendCommandCategoryHelpMessage(message: Message, query: string): void {
+	sendCategoryHelpMessage(message: Message, query: string): void {
+		console.log(query)
+
+		for (const store of this.container.client.stores.values()) {
+			console.log(store.name)
+		}
+
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setTitle(`Category`)
+					.setTitle("Category")
 					.setDescription("Category description")
 					.addField("commands", "-command\n".repeat(5)),
 			],

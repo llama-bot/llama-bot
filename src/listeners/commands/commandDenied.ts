@@ -1,7 +1,7 @@
 import type { CommandDeniedPayload, Events } from "@sapphire/framework"
 import { Listener, UserError } from "@sapphire/framework"
 
-export class UserEvent extends Listener<typeof Events.CommandDenied> {
+export class CommandDenied extends Listener<typeof Events.CommandDenied> {
 	public async run(
 		{ context, message: content }: UserError,
 		{ message }: CommandDeniedPayload
