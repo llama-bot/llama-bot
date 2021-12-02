@@ -1,6 +1,6 @@
 import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message, MessageEmbed } from "discord.js"
+import { Formatters, Message, MessageEmbed } from "discord.js"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["c", "clap"],
@@ -8,11 +8,11 @@ import { Message, MessageEmbed } from "discord.js"
 		"does the annoying Karen clap. Does not work with external emojis.",
 })
 export default class ClapifyCommand extends Command {
-	async messageRun(message: Message, args: Args) {
-		const inputs = await args.repeat("string").then(() => [])
+	async messageRun(message: Message, args: Args): Promise<void> {
+		const inputs = await args.repeat("string").catch(() => [])
 
-		if (!inputs)
-			return message.channel.send({
+		if (!inputs) {
+			message.channel.send({
 				embeds: [
 					new MessageEmbed()
 						.setTitle("Error!")
@@ -20,6 +20,17 @@ export default class ClapifyCommand extends Command {
 				],
 			})
 
-		message.channel.send(inputs.join(" :clap: "))
+			return
+		}
+
+		message.channel.send({
+			embeds: [
+				new MessageEmbed().setDescription(`**${Formatters.userMention(
+					message.author.id
+				)} says:**
+
+${inputs.join(":clap:")}`),
+			],
+		})
 	}
 }
