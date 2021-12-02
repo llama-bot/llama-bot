@@ -31,6 +31,8 @@ export default class AboutCommand extends Command {
 		const formattedBotCreationDate = formatDate(botCreatedTime.date)
 		const botAgeInDays = countDays(botCreatedTime.date.getTime(), now)
 
+		const serversCount = this.container.client.guilds.cache.size || 0
+
 		message.channel.send({
 			embeds: [
 				new MessageEmbed().setTitle("About").addFields(
@@ -57,6 +59,13 @@ export default class AboutCommand extends Command {
 					{
 						name: "Uptime",
 						value: formattedUptime,
+						inline: true,
+					},
+					{
+						name: "Servers",
+						value: `The bot is in ${serversCount} server${
+							serversCount >= 1 ? "s" : ""
+						}.`,
 						inline: true,
 					},
 					{
