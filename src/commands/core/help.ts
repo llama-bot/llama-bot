@@ -120,18 +120,29 @@ Shows info about \`ping\` command:
 	}
 
 	sendCategoryHelpMessage(message: Message, query: string): void {
-		console.log(query)
+		const commandsStore = this.container.stores.get("commands")
+		let selectedCategoryName = ""
 
-		for (const store of this.container.client.stores.values()) {
-			console.log(store.name)
-		}
+		commandsStore.categories.map((categoryName) => {
+			if (categoryName.toLowerCase() === query.toLowerCase())
+				selectedCategoryName = categoryName
+		})
+
+		if (!selectedCategoryName) return
+
+		const commandsInCategory = commandsStore.filter((command) =>
+			command.fullCategory.includes(selectedCategoryName)
+		)
 
 		message.channel.send({
 			embeds: [
 				new MessageEmbed()
-					.setTitle("Category")
+					.setTitle(selectedCategoryName)
 					.setDescription("Category description")
-					.addField("commands", "-command\n".repeat(5)),
+					.addField(
+						"commands",
+						commandsInCategory.map((command) => `-${command.name}\n`).join("")
+					),
 			],
 		})
 	}
