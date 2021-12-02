@@ -89,7 +89,7 @@ Shows info about \`ping\` command:
 
 	sendDefaultHelpMessage(message: Message): void {
 		const helpEmbed = new MessageEmbed().setTitle("Help").setDescription(
-			`Use \`${process.env.PREFIX}help <command | category>\` command to get more information about a command or a command category.
+			`Use \`${process.env.PREFIX}help <category>\` command to get more information about a command category.
 This command is not case sensitive.`
 		)
 
