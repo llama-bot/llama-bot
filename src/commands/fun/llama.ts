@@ -3,10 +3,12 @@ import { ApplyOptions } from "@sapphire/decorators"
 import { Message } from "discord.js"
 
 @ApplyOptions<CommandOptions>({
-	aliases: ["l"],
+	aliases: ["l", "llamaQuote", "llamaQuotes", "lq"],
 	description: "Shows a random llama quote.",
 })
 export default class LlamaCommand extends Command {
+	// todo: fetch llama quotes data
+
 	// self.quotes: list[str] = self.bot.settings["quotes"]
 	// self.quotes_length = len(self.quotes)
 
