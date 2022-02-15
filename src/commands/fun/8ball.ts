@@ -15,7 +15,7 @@ export default class EightBallCommand extends Command {
 
 		const input = [...(await args.repeat("string").catch(() => ""))].join(" ")
 
-		const response = await globalObject.nekosClient.sfw["8Ball"]({
+		const response = await globalObject.nekosClient.sfw["eightBall"]({
 			text: input,
 		})
 

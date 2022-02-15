@@ -40,7 +40,9 @@ e.g.
 	).filter(
 		(elem) =>
 			// the return values for these options do not have the url attribute
-			!["why", "catText", "OwOify", "8Ball", "fact", "spoiler"].includes(elem)
+			!["why", "catText", "OwOify", "eightBall", "fact", "spoiler"].includes(
+				elem
+			)
 	) as sfwOptionsType[]
 
 	async messageRun(message: Message, args: Args): Promise<void> {
@@ -101,9 +103,18 @@ e.g.
 			const sfwIndex = caseInsensitiveIndexOf(this.sfwOptions, option2)
 
 			if (sfwIndex >= 0) {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore None of them require an argument
 				const result = await globalObject.nekosClient.sfw[
 					this.sfwOptions[sfwIndex]
 				]()
+
+				if (!result.url) {
+					// todo: handle edge case
+					console.log("URL for the image was not found")
+					return
+				}
+
 				this.sendImage(message, result.url)
 			} else {
 				this.option2NotFound(message, option2)
