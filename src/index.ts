@@ -7,25 +7,37 @@ import { start as startPrettyError } from "pretty-error"
 import serviceAccountKey from "./secret/firebase-adminsdk.json"
 import DB from "./DB"
 
-startPrettyError()
+function initializeEnv() {
+	dotenv.config()
+	// do not start the bot if token is not found
+	if (!process.env.TOKEN) throw Error("Token not found!")
 
-dotenv.config()
-// do not start the bot if token is not found
-if (!process.env.TOKEN) throw Error("Token not found!")
+	// set to default values if not defined already
+	process.env.TESTING ??= "false"
+	process.env.PREFIX_PROD ??= "-"
+	process.env.PREFIX_DEV ??= "b-"
 
-// set to default values if not defined already
-process.env.TESTING ??= "false"
-process.env.PREFIX_PROD ??= "-"
-process.env.PREFIX_DEV ??= "b-"
+	process.env.PREFIX =
+		process.env.TESTING == "true"
+			? process.env.PREFIX_DEV
+			: process.env.PREFIX_PROD
+}
 
-process.env.PREFIX =
-	process.env.TESTING == "true"
-		? process.env.PREFIX_DEV
-		: process.env.PREFIX_PROD
+function initializeFirebaseAdmin() {
+	admin.initializeApp({
+		credential: admin.credential.cert(
+			serviceAccountKey as admin.ServiceAccount
+		),
+	})
+}
 
-admin.initializeApp({
-	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
-})
+function initialize() {
+	startPrettyError()
+	initializeEnv()
+	initializeFirebaseAdmin()
+}
+
+initialize()
 
 export const globalObject = {
 	startTime: 0,
@@ -41,9 +53,15 @@ export const client = new SapphireClient({
 	intents: ["GUILDS", "GUILD_MESSAGES"],
 })
 
+//
 // start the  bot
+//
+
 try {
 	client.login(process.env.TOKEN)
-} catch (error) {
+} catch (err) {
+	console.log("The bot crashed :(")
+	console.error(err)
+
 	client.destroy()
 }
