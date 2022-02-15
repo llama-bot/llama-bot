@@ -8,7 +8,7 @@
 ![Prettier](https://img.shields.io/badge/prettier-ff69b4.svg?style=for-the-badge)
 
 <br />
-<img alt="llama logo" src=".llama/logo.png" />
+<img alt="llama logo" src=".repo/logo.png" />
 
 </div>
 
