@@ -42,7 +42,7 @@ export default class PPCommand extends Command {
 			try {
 				users.push({
 					id: memberIDStr,
-					length: this.snowflakeToNumber(memberID),
+					length: this.calculatePPLength(memberID),
 				})
 			} catch (e) {
 				continue
@@ -64,7 +64,12 @@ export default class PPCommand extends Command {
 		})
 	}
 
-	snowflakeToNumber(snowflake: number): number {
-		return Math.round((Math.sin(snowflake) + 1) * 15) // maps 0~2 to 0~30
+	/**
+	 * Convert snowflake to pp length
+	 *
+	 * @param {number} snowflake - Discord snowflake
+	 */
+	calculatePPLength(snowflake: number): number {
+		return snowflake % 31
 	}
 }
