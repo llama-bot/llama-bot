@@ -1,39 +1,53 @@
 /**
- * @file Firestore database interface for the llama bot.
+ * @file Database interface for the llama bot.
+ * Currently using firebase firestore but will be replaced with redis in the future.
  */
 
 import admin from "firebase-admin"
 import { Snowflake } from "discord-api-types"
+import serviceAccountKey from "./secret/firebase-adminsdk.json"
 
 import { Settings, Servers, ServerData } from "./types/llamaBot"
 
-export default class {
-	firestoreDB = admin.firestore()
+admin.initializeApp({
+	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
+})
 
-	settings: Settings = {}
-	servers: Servers = {}
+export const firestoreDB = admin.firestore()
 
-	async fetchSettings(): Promise<Settings> {
-		return this.firestoreDB
-			.collection("llama-bot")
-			.doc("settings")
-			.get()
-			.then((doc) => doc.data() as Settings)
-	}
+export const settings: Settings = {}
+export const servers: Servers = {}
 
-	async fetchServerData(serverSnowflake: Snowflake): Promise<ServerData> {
-		const result: { [key: string]: FirebaseFirestore.DocumentData } = {}
+export async function fetchSettings(): Promise<Settings> {
+	return firestoreDB
+		.collection("llama-bot")
+		.doc("settings")
+		.get()
+		.then((doc) => doc.data() as Settings)
+}
 
-		const snapshot = await this.firestoreDB
-			.collection("llama-bot")
-			.doc("servers")
-			.collection(serverSnowflake)
-			.get()
+export async function fetchServerData(
+	serverSnowflake: Snowflake
+): Promise<ServerData> {
+	const result: { [key: string]: FirebaseFirestore.DocumentData } = {}
 
-		snapshot.forEach((doc) => {
-			result[doc.id] = doc.data()
-		})
+	const snapshot = await firestoreDB
+		.collection("llama-bot")
+		.doc("servers")
+		.collection(serverSnowflake)
+		.get()
 
-		return (this.servers[serverSnowflake] = result as unknown as ServerData)
-	}
+	snapshot.forEach((doc) => {
+		result[doc.id] = doc.data()
+	})
+
+	return (servers[serverSnowflake] = result as unknown as ServerData)
+}
+
+export default {
+	firestoreDB,
+	settings,
+	servers,
+	fetchSettings,
+	fetchServerData,
 }

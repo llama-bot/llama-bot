@@ -1,11 +1,8 @@
 import { SapphireClient } from "@sapphire/framework"
-import dotenv from "dotenv"
-import nekosClient from "nekos.life"
-import admin from "firebase-admin"
 import { start as startPrettyError } from "pretty-error"
-
-import serviceAccountKey from "./secret/firebase-adminsdk.json"
-import DB from "./DB"
+import nekosClient from "nekos.life"
+import dotenv from "dotenv"
+import "./DB"
 
 function initializeEnv() {
 	dotenv.config()
@@ -23,18 +20,9 @@ function initializeEnv() {
 			: process.env.PREFIX_PROD
 }
 
-function initializeFirebaseAdmin() {
-	admin.initializeApp({
-		credential: admin.credential.cert(
-			serviceAccountKey as admin.ServiceAccount
-		),
-	})
-}
-
 function initialize() {
 	startPrettyError()
 	initializeEnv()
-	initializeFirebaseAdmin()
 }
 
 initialize()
@@ -42,10 +30,9 @@ initialize()
 export const globalObject = {
 	startTime: 0,
 	nekosClient: new nekosClient(),
-	db: new DB(),
 }
 
-export const client = new SapphireClient({
+const client = new SapphireClient({
 	baseUserDirectory: __dirname,
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
