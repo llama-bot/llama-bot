@@ -11,12 +11,14 @@ import { globalObject } from "../.."
 export default class FactCommand extends Command {
 	async messageRun(message: Message) {
 		message.channel.sendTyping()
+
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle("Fact of the day")
-					.setDescription((await globalObject.nekosClient.sfw.fact()).fact)
-					.setFooter("powered by nekos.life"),
+				new MessageEmbed({
+					title: "Here's a fact for you",
+					description: (await globalObject.nekosClient.sfw.fact()).fact,
+					footer: { text: "powered by nekos.life" },
+				}),
 			],
 		})
 	}
