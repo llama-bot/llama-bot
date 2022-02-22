@@ -12,13 +12,14 @@ export default class CatCommand extends Command {
 	async messageRun(message: Message, args: Args) {
 		message.channel.sendTyping()
 
+		// combine all arguments to a single string
 		const input = [...(await args.repeat("string").catch(() => ""))].join(" ")
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setDescription(
-						`**${Formatters.userMention(message.author.id)} says:**
+				new MessageEmbed({
+					title: "OwO",
+					description: `**${Formatters.userMention(message.author.id)} says:**
 
 ${
 	(
@@ -26,9 +27,9 @@ ${
 			text: input,
 		})
 	).owo
-}`
-					)
-					.setFooter("powered by nekos.life"),
+}`,
+					footer: { text: "powered by nekos.life" },
+				}),
 			],
 		})
 	}
