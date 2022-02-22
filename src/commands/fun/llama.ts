@@ -1,47 +1,29 @@
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message } from "discord.js"
+import { Message, MessageEmbed } from "discord.js"
+
+import { settings, fetchSettings } from "../../DB"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["l", "llamaQuote", "llamaQuotes", "lq"],
 	description: "Shows a random llama quote.",
 })
 export default class LlamaCommand extends Command {
-	// todo: fetch llama quotes data
-
-	// self.quotes: list[str] = self.bot.settings["quotes"]
-	// self.quotes_length = len(self.quotes)
-
-	// # key: server snowflake, value: index array
-	// self.quote_indices: dict[int, list[int]] = dict()
-
-	// # key: server snowflake, value: current quote index of server
-	// self.quote_current_index: dict[int, int] = dict()
-
 	async messageRun(message: Message) {
-		console.log(message.content)
-		// server_snowflake: int = ctx.guild.id
-		// # if server index array is not initialized
-		// if server_snowflake not in self.quote_indices:
-		//     self.quote_indices[server_snowflake] = list(range(self.quotes_length))
-		//     random.shuffle(self.quote_indices[server_snowflake])
-		// # if server current index is not set
-		// if server_snowflake not in self.quote_current_index:
-		//     self.quote_current_index[server_snowflake] = 0
-		// await ctx.send(
-		//     embed=discord.Embed(
-		//         title="Llama quote that'll make your day",
-		//         description=self.quotes[
-		//             self.quote_indices[server_snowflake][
-		//                 self.quote_current_index[server_snowflake]
-		//             ]
-		//         ],
-		//     )
-		// )
-		// self.quote_current_index[server_snowflake] += 1
-		// if self.quote_current_index[server_snowflake] > (self.quotes_length - 1):
-		//     # reshuffle and reset index
-		//     random.shuffle(self.quote_indices[server_snowflake])
-		// self.quote_current_index[server_snowflake] = 0
+		if (!settings.quotes) {
+			await fetchSettings()
+		}
+
+		message.channel.send({
+			embeds: [
+				new MessageEmbed({
+					title: "Llama quote that'll make your day",
+					description:
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						settings.quotes[Number(message.id) % settings.quotes.length],
+				}),
+			],
+		})
 	}
 }
