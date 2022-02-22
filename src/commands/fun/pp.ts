@@ -5,16 +5,31 @@ import { Formatters, Message, MessageEmbed } from "discord.js"
 @ApplyOptions<CommandOptions>({
 	aliases: ["penis"],
 	description: `Measure user's pp length and arrange them in descending order.
-Shortest length: 0  (\`8D\`).
-Longest length:  30 (\`8==============================D\`).
+
+Shortest length (0):
+\`8D\`
+Longest length (30):
+\`8==============================D\`
 
 This is 101% accurate.`,
 })
 export default class PPCommand extends Command {
+	usage = `Measure yourself:
+> ${process.env.PREFIX}pp
+
+Measure someone else:
+> ${process.env.PREFIX}pp <user>
+
+You can even measure multiple people at once:
+> ${process.env.PREFIX}pp <user1> <user2> ...
+`
+
 	async messageRun(message: Message, args: Args) {
-		let description = ""
-		const users: { id: string; length: number }[] = []
 		let membersRaw = await args.repeat("string").catch(() => [])
+
+		//
+		//  handle 0 argument case
+		//
 
 		if (membersRaw.length <= 0) {
 			if (!message.member) {
@@ -30,6 +45,12 @@ export default class PPCommand extends Command {
 
 			membersRaw = [message.author.id]
 		}
+
+		//
+		// Calculate pp lengths
+		//
+
+		const users: { id: string; length: number }[] = []
 
 		for (const memberRaw of membersRaw) {
 			const numbersInString = memberRaw.match(/\d+/)
@@ -52,15 +73,30 @@ export default class PPCommand extends Command {
 		// sort users ascending by pp length
 		users.sort((prev, curr) => curr.length - prev.length)
 
+		//
+		// construct description
+		//
+
+		let description = ""
+
 		for (const user of users) {
 			const userMention = Formatters.userMention(user.id)
 
-			description += `**${userMention}'s size': (${user.length})**\n`
-			description += `8${"=".repeat(user.length)}D\n`
+			description += `${userMention}:\n`
+			description += `8${"=".repeat(user.length)}D **(${user.length})**\n`
 		}
 
+		//
+		// Reply
+		//
+
 		message.channel.send({
-			embeds: [new MessageEmbed().setTitle("pp").setDescription(description)],
+			embeds: [
+				new MessageEmbed({
+					title: "pp",
+					description,
+				}),
+			],
 		})
 	}
 
