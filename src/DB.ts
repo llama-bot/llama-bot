@@ -13,13 +13,13 @@ admin.initializeApp({
 	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
 })
 
-export const firestoreDB = admin.firestore()
+const firestoreDB = admin.firestore()
 
-export const settings: Settings = {}
+export let settings: Settings = {}
 export const servers: Servers = {}
 
-export async function fetchSettings(): Promise<Settings> {
-	return firestoreDB
+export async function fetchSettings(): Promise<void> {
+	settings = await firestoreDB
 		.collection("llama-bot")
 		.doc("settings")
 		.get()
@@ -44,8 +44,14 @@ export async function fetchServerData(
 	return (servers[serverSnowflake] = result as unknown as ServerData)
 }
 
+//
+// initialize
+//
+
+// todo: make sure settings is fetched before anyone runs a command
+fetchSettings()
+
 export default {
-	firestoreDB,
 	settings,
 	servers,
 	fetchSettings,
