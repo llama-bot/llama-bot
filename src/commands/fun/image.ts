@@ -2,6 +2,7 @@ import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters, Message, MessageEmbed } from "discord.js"
 import NekoClient from "nekos.life"
+
 import { FunctionKeys, $PropertyType } from "utility-types"
 
 import { isChannelNSFW, caseInsensitiveIndexOf } from "../../util"
@@ -10,8 +11,20 @@ import { globalObject } from "../.."
 type nsfwOptionsType = FunctionKeys<$PropertyType<NekoClient, "nsfw">>
 type sfwOptionsType = Exclude<
 	FunctionKeys<$PropertyType<NekoClient, "sfw">>,
-	"why" | "catText" | "OwOify" | "8Ball" | "fact" | "spoiler"
+	"why" | "catText" | "OwOify" | "eightBall" | "fact" | "spoiler"
 >
+
+const nsfwOptions: nsfwOptionsType[] = Object.getOwnPropertyNames(
+	globalObject.nekosClient.nsfw
+) as nsfwOptionsType[]
+
+const sfwOptions: sfwOptionsType[] = Object.getOwnPropertyNames(
+	globalObject.nekosClient.sfw
+).filter(
+	(elem) =>
+		// the return values for these options do not have the url attribute
+		!["why", "catText", "OwOify", "eightBall", "fact", "spoiler"].includes(elem)
+) as sfwOptionsType[]
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["i", "img", "images"],
@@ -29,108 +42,112 @@ image type:
 e.g.
 
 > \`${process.env.PREFIX}image sfw pat\`
+
+You can also do \`${process.env.PREFIX}image help\` or \`${process.env.PREFIX}image list\` if you want to know what kind of images are available.
 `
 
-	nsfwOptions: nsfwOptionsType[] = Object.getOwnPropertyNames(
-		globalObject.nekosClient.nsfw
-	) as nsfwOptionsType[]
-
-	sfwOptions: sfwOptionsType[] = Object.getOwnPropertyNames(
-		globalObject.nekosClient.sfw
-	).filter(
-		(elem) =>
-			// the return values for these options do not have the url attribute
-			!["why", "catText", "OwOify", "eightBall", "fact", "spoiler"].includes(
-				elem
-			)
-	) as sfwOptionsType[]
-
 	async messageRun(message: Message, args: Args): Promise<void> {
-		const option1 = await args.pick("string").catch(() => "")
+		const option1 = (await args.pick("string").catch(() => "")).toLowerCase()
 		const option2 = await args.pick("string").catch(() => "")
 
-		// if options is empty or is "list"
-		if (!option1 || !option2 || option1 === "list") {
+		//
+		// Show help message
+		//
+
+		if (!option1 || !option2 || option1 === "list" || option1 === "help") {
 			this.list(message)
 
 			return
 		}
 
-		if (!["sfw", "nsfw"].includes(option1.toLowerCase())) {
+		//
+		// Handle invalid input
+		//
+
+		if (option1 != "sfw" && option1 != "nsfw") {
 			message.channel.send({
 				embeds: [
-					new MessageEmbed()
-						.setTitle("Error!")
-						.setDescription("Option should be either `list`, `nsfw` or `sfw`"),
+					new MessageEmbed({
+						title: "Error!",
+						description:
+							"Option should be either `list`, `help`, `nsfw` or `sfw`",
+					}),
+				],
+			})
+		}
+
+		//
+		// Logic starts here
+		//
+
+		message.channel.sendTyping()
+
+		//
+		// Get option index
+		//
+
+		let index = -1
+
+		if (option1 === "sfw") {
+			index = caseInsensitiveIndexOf(nsfwOptions, option2)
+		}
+
+		if (option1 === "nsfw") {
+			index = caseInsensitiveIndexOf(nsfwOptions, option2)
+		}
+
+		// check if option is valid
+		if (index < 0) {
+			this.option2NotFound(message, option2)
+
+			return
+		}
+
+		//
+		// check if the channel allows NSFW content
+		//
+
+		// todo: handle server-wide NSFW settings
+		if (option1 === "nsfw" && !isChannelNSFW(message)) {
+			message.channel.send({
+				embeds: [
+					new MessageEmbed({
+						title: "Error!",
+						description: "You cannot run this command outside NSFW channels.",
+					}),
 				],
 			})
 
 			return
 		}
 
-		message.channel.sendTyping()
+		//
+		// Get image url
+		//
 
-		if (option1 == "nsfw") {
-			const nsfwIndex = caseInsensitiveIndexOf(this.nsfwOptions, option2)
-			if (nsfwIndex >= 0) {
-				// check if channel is a NSFW channel
-				if (!isChannelNSFW(message)) {
-					message.channel.send({
-						embeds: [
-							new MessageEmbed()
-								.setTitle("Error!")
-								.setDescription(
-									"You cannot run this command outside NSFW channels."
-								),
-						],
-					})
-					return
-				}
-
-				const result = await globalObject.nekosClient.nsfw[
-					this.nsfwOptions[nsfwIndex]
-				]()
-
-				this.sendImage(message, result.url)
-			} else {
-				this.option2NotFound(message, option2)
-			}
-
-			return
+		let url = ""
+		if (option1 === "sfw") {
+			url = (await globalObject.nekosClient.sfw[sfwOptions[index]]()).url
+		}
+		if (option1 === "nsfw") {
+			url = (await globalObject.nekosClient.nsfw[nsfwOptions[index]]()).url
 		}
 
-		if (option1 == "sfw") {
-			const sfwIndex = caseInsensitiveIndexOf(this.sfwOptions, option2)
+		//
+		// Send image
+		//
 
-			if (sfwIndex >= 0) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore None of them require an argument
-				const result = await globalObject.nekosClient.sfw[
-					this.sfwOptions[sfwIndex]
-				]()
-
-				if (!result.url) {
-					// todo: handle edge case
-					console.log("URL for the image was not found")
-					return
-				}
-
-				this.sendImage(message, result.url)
-			} else {
-				this.option2NotFound(message, option2)
-			}
-
-			return
-		}
+		this.sendImage(message, url)
 	}
 
-	sendImage(message: Message, imageURL: string): void {
+	sendImage(message: Message, url: string): void {
 		if (!message.member) {
 			message.channel.send({
 				embeds: [
-					new MessageEmbed()
-						.setTitle("Error")
-						.setDescription("Failed to identify command caller"),
+					new MessageEmbed({
+						title: "Error",
+						description: "Failed to identify command caller",
+					}),
 				],
 			})
 
@@ -139,15 +156,14 @@ e.g.
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle("Image")
-					.setDescription(
-						`requested by: ${Formatters.userMention(
-							message.member.id
-						)}\n**[Click if you don't see the image](${imageURL})**`
-					)
-					.setImage(imageURL)
-					.setFooter("powered by nekos.life"),
+				new MessageEmbed({
+					title: "Image",
+					description: `requested by: ${Formatters.userMention(
+						message.member.id
+					)}\n**[Click if you don't see the image](${url})**`,
+					image: { url },
+					footer: { text: "powered by nekos.life" },
+				}),
 			],
 		})
 	}
@@ -155,9 +171,10 @@ e.g.
 	option2NotFound(message: Message, option: string): void {
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle("Error!")
-					.setDescription(`Option \`${option}\` is not a valid option.`),
+				new MessageEmbed({
+					title: "Error!",
+					description: `Option \`${option}\` is not a valid option.`,
+				}),
 			],
 		})
 
@@ -167,20 +184,23 @@ e.g.
 	list(message: Message): void {
 		message.channel.send({
 			embeds: [
-				new MessageEmbed().setTitle("Image Options").addFields(
-					{
-						name: "Usage",
-						value: this.usage,
-					},
-					{
-						name: "NSFW",
-						value: `\`${this.nsfwOptions.join("`, `")}\``,
-					},
-					{
-						name: "SFW",
-						value: `\`${this.sfwOptions.join("`, `")}\``,
-					}
-				),
+				new MessageEmbed({
+					title: "Image Options",
+					fields: [
+						{
+							name: "Usage",
+							value: this.usage,
+						},
+						{
+							name: "NSFW",
+							value: `\`${nsfwOptions.join("`, `")}\``,
+						},
+						{
+							name: "SFW",
+							value: `\`${sfwOptions.join("`, `")}\``,
+						},
+					],
+				}),
 			],
 		})
 	}
