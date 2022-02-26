@@ -1,5 +1,21 @@
 # Contribution guide
 
+## Table of contents
+
+- [Contribution guide](#contribution-guide)
+  - [Table of contents](#table-of-contents)
+  - [Purpose](#purpose)
+  - [Assumptions](#assumptions)
+  - [Getting started](#getting-started)
+    - [Development environment](#development-environment)
+    - [Required knowledge](#required-knowledge)
+    - [Bot](#bot)
+    - [Web Interface](#web-interface)
+    - [Documentation](#documentation)
+  - [Rules](#rules)
+    - [Commit message](#commit-message)
+    - [Updating command](#updating-command)
+
 ## Purpose
 
 There are several goals this guide aims to achieve:
@@ -27,12 +43,32 @@ Contributors are free to use whatever IDE they want but the usage of [vscode](ht
 
 Format markdown file(s) with [prettier](https://prettier.io) formatter
 
-## Commit message
+### Required knowledge
+
+### Bot
+
+- [discord.js](https://discord.js.org)
+- [sapphire framework](https://www.sapphirejs.dev)
+
+### Web Interface
+
+- [express.js](https://expressjs.com)
+- [passport.js](https://www.passportjs.org)
+- [firebase functions](https://firebase.google.com/docs/functions)
+
+### Documentation
+
+- [Docusaurus](https://docusaurus.io)
+- [Markdown](https://www.markdownguide.org/basic-syntax)
+
+## Rules
+
+### Commit message
 
 The commit message should be a clear and concise description of what the commit does.
 The first line should be no more than 50 characters and the rest no more than 72.
 
-## Updating command
+### Updating command
 
 A usage guide for a command exists in two places.
 One's in the command's source code itself and the other is in the documentation page.
