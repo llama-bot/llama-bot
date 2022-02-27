@@ -33,7 +33,6 @@ export const globalObject = {
 }
 
 const client = new SapphireClient({
-	baseUserDirectory: __dirname,
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
 	defaultPrefix: process.env.PREFIX,
