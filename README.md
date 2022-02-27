@@ -1,5 +1,3 @@
-# [Llama bot](https://github.com/llama-bot/llama-bot)
+# Llama bot
 
-## [Setting up](https://llama-bot.github.io/llama-bot-docs/docs/bot/setting-up)
-
-## [Contributing](./CONTRIBUTING.md)
+## [Documentation](https://docs.llama.developomp.com/docs/bot/overview)
