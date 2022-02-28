@@ -29,17 +29,17 @@ type CategorizeQueryReturn =
 		"Shows list of helpful information about a command or a command category.",
 })
 export default class HelpCommand extends Command {
-	usage = `> {prefix}{command} ["command"|"category"]
+	usage = `> {$} ["command"|"category"]
 
 ex:
 List categories:
-> {prefix}{command}
+> {$}
 
 List commands in the \`util\` category:
-> {prefix}{command} util
+> {$} util
 
 Shows information about the \`ping\` command:
-> {prefix}{command} ping`
+> {$} ping`
 
 	//
 	commands: CommandStore = this.container.client.stores.get("commands")
@@ -149,9 +149,11 @@ This command is not case sensitive.
 						{
 							name: "Usage",
 							value:
-								command.usage
-									?.replace(/{command}/g, command.name)
-									.replace(/{prefix}/g, process.env.PREFIX) || "WIP",
+								// replace `{$}` with <prefix><command>
+								command.usage?.replace(
+									/{\$}/g,
+									`${process.env.PREFIX}${command.name}`
+								) || "WIP",
 						},
 					],
 				}),

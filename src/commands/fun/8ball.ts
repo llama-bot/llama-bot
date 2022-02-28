@@ -10,6 +10,14 @@ import { globalObject } from "../.."
 		"Gives you the best advice you can get. We are not responsible for your action though.",
 })
 export default class EightBallCommand extends Command {
+	usage = `> {$} [your question]
+
+e.g.
+> {$}
+
+> {$} Should I buy more doge coin?
+`
+
 	async messageRun(message: Message, args: Args) {
 		message.channel.sendTyping()
 

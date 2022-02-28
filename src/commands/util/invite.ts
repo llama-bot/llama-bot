@@ -6,6 +6,8 @@ import { Message, MessageEmbed } from "discord.js"
 	description: "Shows information about inviting the bot.",
 })
 export default class InviteCommand extends Command {
+	usage = "> {$}"
+
 	async messageRun(message: Message) {
 		message.channel.send({
 			embeds: [

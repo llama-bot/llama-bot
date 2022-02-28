@@ -12,6 +12,7 @@ export default class ServerInfoCommand extends Command {
 	// todo: finish server info
 	// todo: online users count
 	// todo: human user accounts count and and bot accounts count
+	usage = "> {$}"
 
 	async messageRun(message: Message) {
 		const guild = message.guild

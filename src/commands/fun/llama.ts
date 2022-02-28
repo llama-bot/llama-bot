@@ -9,6 +9,8 @@ import { settings, fetchSettings } from "../../DB"
 	description: "Shows a random llama quote.",
 })
 export default class LlamaCommand extends Command {
+	usage = "> {$}"
+
 	async messageRun(message: Message) {
 		if (!settings.quotes) {
 			await fetchSettings()

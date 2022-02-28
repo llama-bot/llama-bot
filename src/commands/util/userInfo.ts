@@ -15,6 +15,20 @@ import { formatDate, timeDiff } from "../../util"
 	description: "Gets information about a user.",
 })
 export default class UserInfoCommand extends Command {
+	usage = `> {$} [user]
+
+e.g.
+Get your user info
+> {$}
+
+Get someone else's user info by mentioning
+> {$} @someone
+
+Get someone else's user info with user id
+> {$} 123456789012345678
+`
+
+	// todo: fix getting info from message author instead of selected user
 	async messageRun(message: Message, args: Args) {
 		let user = await args.pick("user").catch(() => undefined)
 

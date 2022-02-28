@@ -31,19 +31,14 @@ const sfwOptions: sfwOptionsType[] = Object.getOwnPropertyNames(
 	description: "Shows some good images",
 })
 export default class ImageCommand extends Command {
-	usage = `> \`${process.env.PREFIX}image <image category> <image type>\`
-
-image category:
-- nsfw & sfw (can be shortened to \`n\` and \`s\`)
-
-image type:
-- Use the \`${process.env.PREFIX}image list\` command to list available options.
+	usage = `> {$} [<"nsfw"|"sfw"|"list"|"help"> <image type>]
 
 e.g.
+List all available image types:
+> {$} help
 
-> \`${process.env.PREFIX}image sfw pat\`
-
-You can also do \`${process.env.PREFIX}image help\` or \`${process.env.PREFIX}image list\` if you want to know what kind of images are available.
+Show an image of a puppy:
+> {$} woof
 `
 
 	async messageRun(message: Message, args: Args): Promise<void> {

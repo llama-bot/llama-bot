@@ -8,6 +8,12 @@ import { Formatters, Message, MessageEmbed } from "discord.js"
 		"Does the annoying Karen clap.👏Does👏not👏work👏with👏external👏emojis.",
 })
 export default class ClapifyCommand extends Command {
+	usage = `> {$} [message to clapify]
+
+e.g.
+> {$} I said bring me the manager.
+`
+
 	async messageRun(message: Message, args: Args): Promise<void> {
 		const inputs = await args.repeat("string").catch(() => [])
 

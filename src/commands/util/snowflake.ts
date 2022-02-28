@@ -9,6 +9,8 @@ import { formatDate, timeDiff } from "../../util"
 	description: "Calculates when a discord ID (snowflake) was created.",
 })
 export default class SnowflakeCommand extends Command {
+	usage = "> {$} <discord snowflake>"
+
 	async messageRun(message: Message, args: Args) {
 		let input: string
 

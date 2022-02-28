@@ -9,6 +9,8 @@ import { globalObject } from "../.."
 	description: "OwOifies youw message OwO",
 })
 export default class CatCommand extends Command {
+	usage = "> {$} [message to owoify]"
+
 	async messageRun(message: Message, args: Args) {
 		message.channel.sendTyping()
 

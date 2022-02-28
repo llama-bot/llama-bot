@@ -14,14 +14,17 @@ Longest length (30):
 This is 101% accurate.`,
 })
 export default class PPCommand extends Command {
-	usage = `Measure yourself:
-> ${process.env.PREFIX}pp
+	usage = `> {$} [user]*
 
-Measure someone else:
-> ${process.env.PREFIX}pp <user>
+e.g.
+Measure yourself:
+> {$}
 
-You can even measure multiple people at once:
-> ${process.env.PREFIX}pp <user1> <user2> ...
+Measure someone else's pp:
+> {$} @someone
+
+Measure multiple people's pp:
+> {$} @someone @sometwo ...
 `
 
 	async messageRun(message: Message, args: Args) {

@@ -9,6 +9,8 @@ import { globalObject } from "../.."
 	description: "Shows useless facts.",
 })
 export default class FactCommand extends Command {
+	usage = "> {$}"
+
 	async messageRun(message: Message) {
 		message.channel.sendTyping()
 

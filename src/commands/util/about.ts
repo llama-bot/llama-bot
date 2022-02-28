@@ -19,6 +19,8 @@ import { globalObject } from "../.."
 	description: "Shows basic information about the bot.",
 })
 export default class AboutCommand extends Command {
+	usage = "> {$}"
+
 	async messageRun(message: Message) {
 		// compute uptime as early as possible
 		const now = message.editedTimestamp || message.createdTimestamp
