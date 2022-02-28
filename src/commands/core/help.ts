@@ -1,3 +1,5 @@
+// todo: also prevent command from having same name as command category
+
 import { Message, MessageEmbed } from "discord.js"
 import {
 	Args,
@@ -27,24 +29,29 @@ type CategorizeQueryReturn =
 		"Shows list of helpful information about a command or a command category.",
 })
 export default class HelpCommand extends Command {
-	usage = `> ${process.env.PREFIX}{command} <cog | command | None>
+	usage = `> {prefix}{command} ["command"|"category"]
+
 ex:
-List cogs:
-> ${process.env.PREFIX}{command}
-List commands in the \`core\` cog:
-> ${process.env.PREFIX}{command} core
-Shows info about \`ping\` command:
-> ${process.env.PREFIX}{command} ping`
+List categories:
+> {prefix}{command}
 
+List commands in the \`util\` category:
+> {prefix}{command} util
+
+Shows information about the \`ping\` command:
+> {prefix}{command} ping`
+
+	//
 	commands: CommandStore = this.container.client.stores.get("commands")
-
 	// lower case names of categories
 	lowerCaseCategoryNames: string[] = []
+	// all command names and aliases
+	allCommands: string[] = []
 
 	async messageRun(message: Message, args: Args): Promise<void> {
-		// todo: find ways to set it on command initialization
-		// todo: also prevent command from having same name as command category
 		if (this.lowerCaseCategoryNames.length <= 0) {
+			// can not put this in class constructor because then `this.commands.categories` will be equal to `[]`
+			// can not put this in the "ready" listener either because of race conditions
 			this.lowerCaseCategoryNames = this.commands.categories.map((elem) =>
 				elem.toLowerCase()
 			)
@@ -57,12 +64,15 @@ Shows info about \`ping\` command:
 			case QueryType.empty:
 				this.sendDefaultHelpMessage(message)
 				break
+
 			case QueryType.command:
 				this.sendCommandHelpMessage(message, queryCategory.command)
 				break
+
 			case QueryType.category:
 				this.sendCategoryHelpMessage(message, query)
 				break
+
 			default:
 				this.sendCommandNotFoundMessage(message, query)
 				break
@@ -79,8 +89,8 @@ Shows info about \`ping\` command:
 
 		const command = this.commands.find(
 			(command: Command, key: string) =>
-				key.toLowerCase() == query ||
-				command.aliases.map((elem) => elem.toLowerCase()).includes(query)
+				key.toLowerCase() === query ||
+				command.aliases.some((elem) => elem.toLowerCase() === query)
 		)
 		if (command) return { queryType: QueryType.command, command }
 
@@ -88,18 +98,33 @@ Shows info about \`ping\` command:
 	}
 
 	sendDefaultHelpMessage(message: Message): void {
-		const helpEmbed = new MessageEmbed().setTitle("Help").setDescription(
-			`Use \`${process.env.PREFIX}help <category>\` command to get more information about a command category.
-This command is not case sensitive.`
-		)
+		const helpEmbed = new MessageEmbed({
+			title: "Help",
+			description: `Use the \`${process.env.PREFIX}help <category>\` command to get more information about a category.
+This command is not case sensitive.
 
-		helpEmbed.addField(
-			"Categories",
-			this.lowerCaseCategoryNames
-				.map((categoryName) => `- \`${categoryName}\`\n`)
-				.join(""),
-			true
-		)
+**Categories:**`,
+		})
+
+		//
+		// add categories
+		//
+
+		this.commands.categories.map((categoryName) => {
+			const commandsInCategory = this.commands.filter((command) =>
+				command.fullCategory.includes(categoryName)
+			)
+
+			helpEmbed.addField(
+				categoryName,
+				`${commandsInCategory.size} commands`,
+				true
+			)
+		})
+
+		//
+		// reply
+		//
 
 		message.channel.send({
 			embeds: [helpEmbed],
@@ -113,66 +138,94 @@ This command is not case sensitive.`
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle(command.name)
-					.setDescription(`Aliases: ${aliases}`)
-					.addField("Description", command.description || "None")
-					.addField("Usage", command.usage || "None"),
+				new MessageEmbed({
+					title: command.name,
+					description: `Aliases: ${aliases}`,
+					fields: [
+						{
+							name: "Description",
+							value: command.description || "WIP",
+						},
+						{
+							name: "Usage",
+							value:
+								command.usage
+									?.replace(/{command}/g, command.name)
+									.replace(/{prefix}/g, process.env.PREFIX) || "WIP",
+						},
+					],
+				}),
 			],
 		})
 	}
 
 	sendCategoryHelpMessage(message: Message, query: string): void {
+		//
+		// find category
+		//
+
 		let selectedCategoryName = ""
 
-		this.commands.categories.map((categoryName) => {
-			if (categoryName.toLowerCase() === query.toLowerCase())
+		const lowerCaseCategoryName = query.toLowerCase()
+		this.commands.categories.some((categoryName) => {
+			if (categoryName.toLowerCase() === lowerCaseCategoryName) {
 				selectedCategoryName = categoryName
+				return true
+			}
 		})
 
-		if (!selectedCategoryName) return
+		//
+		// Find commands in category
+		//
 
 		const commandsInCategory = this.commands.filter((command) =>
 			command.fullCategory.includes(selectedCategoryName)
 		)
 
+		//
+		// Reply
+		//
+
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle(`${selectedCategoryName} commands`)
-					.setDescription(
-						`Use the \`${process.env.PREFIX}help <command>\` command to get more information about a command.
-This command is not case sensitive.`
-					)
-					.addField(
-						"commands",
-						commandsInCategory
-							.map((command) => `-\`${command.name}\`\n`)
-							.join("")
-					),
+				new MessageEmbed({
+					title: `${selectedCategoryName} category`,
+					description: `Use the \`${process.env.PREFIX}help <command>\` command to get more information about a command.
+This command is not case sensitive.`,
+					fields: [
+						{
+							name: "commands",
+							value: commandsInCategory
+								.map((command) => `- \`${command.name}\`\n`)
+								.join(""),
+						},
+					],
+				}),
 			],
 		})
 	}
 
 	sendCommandNotFoundMessage(message: Message, query: string): void {
-		// get all command names and aliases
-		const allCommands = [...this.commands.keys()].concat(
-			this.commands.aliases
-				.map((elem) => elem.aliases)
-				.reduce((prev, curr) => prev.concat(curr)) as string[]
-		)
+		if (this.allCommands.length <= 0) {
+			this.allCommands = [...this.commands.keys()].concat(
+				this.commands.aliases
+					.map((elem) => elem.aliases)
+					.reduce((prev, curr) => prev.concat(curr)) as string[]
+			)
+		}
 
 		const mostLikelyGuess =
-			allCommands[
-				stringSimilarity.findBestMatch(query, allCommands).bestMatchIndex
+			this.allCommands[
+				stringSimilarity.findBestMatch(query, this.allCommands).bestMatchIndex
 			]
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed().setTitle("Command not found").setDescription(
-					`Command \`${query}\` was not found. Did you mean \`${mostLikelyGuess}\`?
-You can also use the \`${process.env.PREFIX}help\` command to list all available commands.`
-				),
+				new MessageEmbed({
+					title: "Command not found",
+					description: `Command \`${query}\` was not found. Did you mean \`${mostLikelyGuess}\`?
+You can also use the \`${process.env.PREFIX}help\` command to list all available commands.`,
+				}),
 			],
 		})
 	}
