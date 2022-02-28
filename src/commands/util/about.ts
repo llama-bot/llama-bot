@@ -1,15 +1,6 @@
-import {
-	Command,
-	CommandOptions,
-	version as SapphireFrameworkVersion,
-} from "@sapphire/framework"
+import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import {
-	SnowflakeUtil,
-	version as DJSVersion,
-	Message,
-	MessageEmbed,
-} from "discord.js"
+import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 
 import { countDays, formatDate, timeDiff } from "../../util"
 import { globalObject } from "../.."
@@ -37,45 +28,33 @@ export default class AboutCommand extends Command {
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed().setTitle("About").addFields(
-					{
-						name: "Node version",
-						value: process.versions.node,
-						inline: true,
-					},
-					{
-						name: "discord.js version",
-						value: DJSVersion,
-						inline: true,
-					},
-					{
-						name: "Sapphire framework version",
-						value: SapphireFrameworkVersion,
-						inline: true,
-					},
-					{
-						name: "Creation date in UTC",
-						value: `${formattedBotCreationDate} (${botAgeInDays} days ago)`,
-						inline: true,
-					},
-					{
-						name: "Uptime",
-						value: formattedUptime,
-						inline: true,
-					},
-					{
-						name: "Servers",
-						value: `The bot is in ${serversCount} server${
-							serversCount >= 1 ? "s" : ""
-						}.`,
-						inline: true,
-					},
-					{
-						name: "Source Code",
-						value: "https://github.com/llama-bot",
-						inline: false,
-					}
-				),
+				new MessageEmbed({
+					title: "About",
+					fields: [
+						{
+							name: "Creation date in UTC",
+							value: `${formattedBotCreationDate} (${botAgeInDays} days ago)`,
+							inline: true,
+						},
+						{
+							name: "Uptime",
+							value: formattedUptime,
+							inline: true,
+						},
+						{
+							name: "Servers",
+							value: `The bot is in ${serversCount} server${
+								serversCount > 1 ? "s" : ""
+							}.`,
+							inline: true,
+						},
+						{
+							name: "Source Code",
+							value: "https://github.com/llama-bot",
+							inline: false,
+						},
+					],
+				}),
 			],
 		})
 	}
@@ -83,11 +62,11 @@ export default class AboutCommand extends Command {
 	failedToGetStartTime(message: Message): void {
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setTitle("Failed to run command")
-					.setDescription(
-						"The bot failed to get one or more information about the bot."
-					),
+				new MessageEmbed({
+					title: "Failed to run command",
+					description:
+						"The bot failed to get one or more information about the bot.",
+				}),
 			],
 		})
 	}
