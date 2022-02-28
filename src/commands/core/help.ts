@@ -103,6 +103,8 @@ Shows information about the \`ping\` command:
 			description: `Use the \`${process.env.PREFIX}help <category>\` command to get more information about a category.
 This command is not case sensitive.
 
+You can read more about the bot in the [documentation](https://docs.llama.developomp.com/docs/usage/overview).
+
 **Categories:**`,
 		})
 
