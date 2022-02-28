@@ -1,7 +1,5 @@
 {
-	"name": "llama-bot",
 	"main": "dist/index.js",
-	"license": "MIT",
 	"private": true,
 	"scripts": {
 		"start": "yarn build && node dist/index.js",

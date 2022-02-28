@@ -13,7 +13,7 @@ export default class InviteCommand extends Command {
 			embeds: [
 				new MessageEmbed({
 					title: "Sorry",
-					description: `Sorry, but only the owner can invite the Llama bot.
+					description: `Sorry, but only the owner can invite the bot.
 Check the [documentation](https://docs.llama.developomp.com/docs/overview#can-i-use-this-bot-in-my-discord-server) for more information.`,
 				}),
 			],

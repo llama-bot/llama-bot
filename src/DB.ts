@@ -1,13 +1,12 @@
 /**
- * @file Database interface for the llama bot.
- * Currently using firebase firestore but will be replaced with redis in the future.
+ * @file Database interface for the bot.
  */
 
 import admin from "firebase-admin"
 import { Snowflake } from "discord-api-types"
 import serviceAccountKey from "./secret/firebase-adminsdk.json"
 
-import { Settings, Servers, ServerData } from "./types/llamaBot"
+import { Settings, Servers, ServerData } from "./types/bot"
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccountKey as admin.ServiceAccount),
