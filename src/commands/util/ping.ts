@@ -11,42 +11,46 @@ export default class PingCommand extends Command {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {
-		const embedDescription = `**TR1GGERED** by ${message.author}`
-
 		const response = await message.channel.send({
 			embeds: [
-				new MessageEmbed().setDescription(embedDescription).addFields(
-					{
-						name: "API Latency",
-						value: "...",
-						inline: true,
-					},
-					{
-						name: "Bot latency",
-						value: "...",
-						inline: true,
-					}
-				),
+				new MessageEmbed({
+					description: `Called by ${message.author}`,
+					fields: [
+						{
+							name: "API Latency",
+							value: "...",
+							inline: true,
+						},
+						{
+							name: "Bot latency",
+							value: "...",
+							inline: true,
+						},
+					],
+				}),
 			],
 		})
 
 		response.edit({
 			embeds: [
-				new MessageEmbed().setDescription(embedDescription).addFields(
-					{
-						name: "API latency",
-						value: `${
-							(response.editedTimestamp || response.createdTimestamp) -
-							(message.editedTimestamp || message.createdTimestamp)
-						}ms`,
-						inline: true,
-					},
-					{
-						name: "Bot latency",
-						value: `${Math.round(this.container.client.ws.ping)}ms`,
-						inline: true,
-					}
-				),
+				new MessageEmbed({
+					description: `Called by ${message.author}`,
+					fields: [
+						{
+							name: "API latency",
+							value: `${
+								(response.editedTimestamp || response.createdTimestamp) -
+								(message.editedTimestamp || message.createdTimestamp)
+							}ms`,
+							inline: true,
+						},
+						{
+							name: "Bot latency",
+							value: `${Math.round(this.container.client.ws.ping)}ms`,
+							inline: true,
+						},
+					],
+				}),
 			],
 		})
 	}
