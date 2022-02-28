@@ -13,9 +13,9 @@ export default class AboutCommand extends Command {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {
-		// compute uptime as early as possible
 		const now = message.editedTimestamp || message.createdTimestamp
 		const startTime = globalObject.startTime
+
 		if (!startTime || !this.container.client.id)
 			return this.failedToGetStartTime(message)
 
