@@ -1,95 +1,227 @@
-import { Formatters, Message, MessageEmbed, SnowflakeUtil } from "discord.js"
+import {
+	Formatters,
+	Guild,
+	Message,
+	MessageEmbed,
+	SnowflakeUtil,
+} from "discord.js"
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 
-import { formatDate, timeDiff } from "../../util"
+import { formatDate, timeDiff, highlightIndex, formatNumber } from "../../util"
+
+interface Data {
+	// general info
+	guildName: string
+	guildIconUrl: string
+	guildOwner: string
+	membersCount: number
+	maxMembers: number | null
+	communityStatus: string
+	partneredStatus: string
+	verifiedStatus: string
+	ScanningStatus: string
+	verificationStatus: string
+	nitroBoosts: number
+	boostLevel: number
+
+	// creation date
+	guildCreationDate: string
+	guildAge: string
+
+	// channels
+	totalChannelCount: number
+	textChannelCount: number
+	voiceChannelCount: number
+	announcementChannelCount: number
+	stageChannelCount: number
+	storeChannelCount: number
+}
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["si"],
-	description: "Gets information about the server",
+	description: "Show information about the server",
 })
 export default class ServerInfoCommand extends Command {
-	// todo: finish server info
-	// todo: online users count
-	// todo: human user accounts count and and bot accounts count
 	usage = "> {$}"
 
-	async messageRun(message: Message) {
-		const guild = message.guild
+	// value of VerificationLevels from "discord.js/typings/enums"
+	// DO NOT CHANGE!!
+	verificationLevels = ["NONE", "LOW", "MEDIUM", "HIGH", "VERY_HIGH"]
 
-		if (!guild) {
+	// value of ExplicitContentFilterLevels from "discord.js/typings/enums"
+	// DO NOT CHANGE!!
+	explicitContentFilterLevels = [
+		"DISABLED",
+		"MEMBERS_WITHOUT_ROLES",
+		"ALL_MEMBERS",
+	]
+
+	// value of PremiumTiers from "discord.js/typings/enums"
+	// DO NOT CHANGE!!
+	premiumTiers = ["NONE", "TIER_1", "TIER_2", "TIER_3"]
+
+	async messageRun(message: Message) {
+		message.channel.sendTyping()
+
+		if (!message.guild) {
 			message.channel.send({
 				embeds: [
-					new MessageEmbed()
-						.setTitle("Error!")
-						.setDescription("This command only works in servers"),
+					new MessageEmbed({
+						title: "Error!",
+						description: "This command only works in servers",
+					}),
 				],
 			})
+
 			return
 		}
 
-		const iconURL = guild.iconURL() || ""
+		this.reply(message, message.guild)
+	}
+
+	async getData(message: Message, guild: Guild): Promise<Data> {
+		//
+		// general info
+		//
+
+		const guildName = guild.name
+		const guildIconUrl = guild.iconURL() || ""
+		const guildOwner = Formatters.userMention(guild.ownerId)
+
+		const membersCount = guild.memberCount
+		const maxMembers = guild.maximumMembers
+
+		const communityStatus = highlightIndex(
+			guild.features.includes("COMMUNITY") ? 0 : 1,
+			["Yes", "No"]
+		)
+		const partneredStatus = highlightIndex(
+			guild.features.includes("PARTNERED") ? 0 : 1,
+			["Yes", "No"]
+		)
+		const verifiedStatus = highlightIndex(
+			guild.features.includes("VERIFIED") ? 0 : 1,
+			["Yes", "No"]
+		)
+
+		const ScanningStatus = highlightIndex(
+			this.explicitContentFilterLevels.indexOf(guild.explicitContentFilter),
+			this.explicitContentFilterLevels
+		)
+		const verificationStatus = highlightIndex(
+			this.verificationLevels.indexOf(guild.verificationLevel),
+			this.verificationLevels
+		)
+
+		const nitroBoosts = guild.premiumSubscriptionCount || 0
+		const boostLevel = this.premiumTiers.indexOf(guild.premiumTier)
+
+		//
+		// creation date
+		//
 
 		const serverCreatedTime = SnowflakeUtil.deconstruct(guild.id)
-		const whenWasServerCreated = formatDate(serverCreatedTime.date)
-		const howLongAgoWasServerCreated = timeDiff(
+		const guildCreationDate = formatDate(serverCreatedTime.date)
+		const guildAge = timeDiff(
 			serverCreatedTime.date.getTime(),
 			message.editedTimestamp || message.createdTimestamp
 		)
 
+		//
+		// channels
+		//
+
 		const channels = await guild.channels.fetch()
 
-		let announcementChannelsCount = 0
-		let textChannelsCount = 0
-		let voiceChannelsCount = 0
-		let stageChannelsCount = 0
+		const totalChannelCount = channels.size
+		let textChannelCount = 0
+		let voiceChannelCount = 0
+		let announcementChannelCount = 0
+		let stageChannelCount = 0
+		let storeChannelCount = 0
 
 		for (const [, channel] of channels) {
-			if (channel.type === "GUILD_TEXT") textChannelsCount += 1
-			if (channel.type === "GUILD_VOICE") voiceChannelsCount += 1
-			if (channel.type === "GUILD_NEWS") announcementChannelsCount += 1
-			if (channel.type === "GUILD_STAGE_VOICE") stageChannelsCount += 1
+			if (channel.type === "GUILD_TEXT") textChannelCount += 1
+			if (channel.type === "GUILD_VOICE") voiceChannelCount += 1
+			if (channel.type === "GUILD_NEWS") announcementChannelCount += 1
+			if (channel.type === "GUILD_STAGE_VOICE") stageChannelCount += 1
+			if (channel.type === "GUILD_STORE") storeChannelCount += 1
 		}
+
+		return {
+			// general info
+			guildName,
+			guildIconUrl,
+			guildOwner,
+			membersCount,
+			maxMembers,
+			communityStatus,
+			partneredStatus,
+			verifiedStatus,
+			ScanningStatus,
+			verificationStatus,
+			nitroBoosts,
+			boostLevel,
+
+			// creation date
+			guildCreationDate,
+			guildAge,
+
+			// channels
+			totalChannelCount,
+			textChannelCount,
+			voiceChannelCount,
+			announcementChannelCount,
+			stageChannelCount,
+			storeChannelCount,
+		}
+	}
+
+	async reply(message: Message, guild: Guild): Promise<void> {
+		const data = await this.getData(message, guild)
 
 		message.channel.send({
 			embeds: [
-				new MessageEmbed()
-					.setAuthor(guild.name, iconURL)
-					.setThumbnail(iconURL)
-					.setDescription(
-						`Owner: ${Formatters.userMention(guild.ownerId)}
-${
-	(guild.features.includes("PARTNERED") ? "- Partnered server" : "") +
-	(guild.features.includes("COMMUNITY") ? "- Community server" : "")
-}
+				new MessageEmbed({
+					title: data.guildName,
+					thumbnail: { url: data.guildIconUrl },
 
-Members: ${guild.memberCount} / ${guild.maximumMembers}
-Roles: ${(await guild.roles.fetch()).size}
-Nitro boosts: XX (lvl X)
-Scanning level: XXXXX
-Verification level: ${guild.verificationLevel.replace("_", " ").toLowerCase()}`
-					)
-					.addField(
-						"Creation date",
-						`Creation date in UTC (24h time): ${whenWasServerCreated}
-						
-${howLongAgoWasServerCreated} ago`
-					)
-					.addField(
-						"Channels",
-						`Channels: ${channels.size}
-Text: ${textChannelsCount}
-Voice: ${voiceChannelsCount}
-Announcement: ${announcementChannelsCount}
-Stage: ${stageChannelsCount}`
-					)
-					.addField(
-						"Features",
-						guild.features
-							.map((feature) => `\`${feature.toLowerCase()}\``)
-							.join(", ")
-					)
-					.setFooter(`ID: ${guild.id}`),
+					description: `Owner: ${data.guildOwner}
+
+Members: Capacity: ${formatNumber(data.membersCount)} / ${formatNumber(
+						data.maxMembers
+					)}
+
+Community: ${data.communityStatus}
+Partnered: ${data.partneredStatus}
+Verified: ${data.verifiedStatus}
+
+Scanning: ${data.ScanningStatus}
+Verification: ${data.verificationStatus}
+
+Nitro boosts: ${data.nitroBoosts} (Lv ${data.boostLevel})`,
+
+					fields: [
+						{
+							name: "Creation date",
+							value: `Creation date in UTC (24h time): ${data.guildCreationDate}
+
+${data.guildAge} ago`,
+						},
+
+						{
+							name: "Channels",
+							value: `Channels: ${data.totalChannelCount}
+Text: ${data.textChannelCount}
+Voice: ${data.voiceChannelCount}
+Announcement: ${data.announcementChannelCount}
+Stage: ${data.stageChannelCount}
+Store: ${data.storeChannelCount}`,
+						},
+					],
+					footer: { text: `Server ID: ${guild.id}` },
+				}),
 			],
 		})
 	}
