@@ -12,9 +12,10 @@
     - [Bot](#bot)
     - [Web Interface](#web-interface)
     - [Documentation](#documentation)
-  - [Rules](#rules)
-    - [Commit message](#commit-message)
-    - [Updating command](#updating-command)
+  - [Commit message](#commit-message)
+  - [Creating / updating a command](#creating--updating-a-command)
+    - [Help message](#help-message)
+    - [Testing edge cases](#testing-edge-cases)
 
 ## Purpose
 
@@ -61,15 +62,15 @@ Format markdown file(s) with [prettier](https://prettier.io) formatter
 - [Docusaurus](https://docusaurus.io)
 - [Markdown](https://www.markdownguide.org/basic-syntax)
 
-## Rules
-
-### Commit message
+## Commit message
 
 The commit message should be a clear and concise description of what the commit does.
 The first line should be no more than 50 characters and the rest no more than 72.
 
-### Updating command
+## Creating / updating a command
 
-A usage guide for a command exists in two places.
-One's in the command's source code itself and the other is in the documentation page.
-When a command is updated, both sources should not be in conflict.
+### Help message
+
+- consistent usage information
+
+### Testing edge cases
