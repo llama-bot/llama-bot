@@ -11,6 +11,7 @@
 	},
 	"rules": {
 		"semi": ["error", "never"],
-		"quotes": ["error", "double"]
+		"quotes": ["error", "double"],
+		"@typescript-eslint/ban-ts-comment": "off"
 	}
 }
