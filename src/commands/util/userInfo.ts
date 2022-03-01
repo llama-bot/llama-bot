@@ -1,18 +1,14 @@
+// todo: nitro boost
+
 import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import {
-	Formatters,
-	GuildMember,
-	Message,
-	MessageEmbed,
-	Permissions,
-} from "discord.js"
+import { Formatters, GuildMember, Message, MessageEmbed } from "discord.js"
 
 import { formatDate, timeDiff } from "../../util"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["ui"],
-	description: "Gets information about a user.",
+	description: "Shows information about a user.",
 })
 export default class UserInfoCommand extends Command {
 	usage = `> {$} [user]
@@ -28,7 +24,6 @@ Get someone else's user info with user id
 > {$} 123456789012345678
 `
 
-	// todo: fix getting info from message author instead of selected user
 	async messageRun(message: Message, args: Args) {
 		let user = await args.pick("user").catch(() => undefined)
 
@@ -36,38 +31,31 @@ Get someone else's user info with user id
 
 		const avatarURL = user.avatarURL() || undefined
 
-		const resultEmbed = new MessageEmbed()
-			.setAuthor(user.tag, avatarURL)
-			.setThumbnail(avatarURL || "")
-			.setDescription(Formatters.userMention(user.id))
-			.addField("Discord join date", this.formattedJoinDate(user.createdAt))
-			.setFooter(`ID: ${user.id}`)
+		const resultEmbed = new MessageEmbed({
+			author: { name: user.tag, icon_url: avatarURL },
+			thumbnail: { url: avatarURL },
+			description: Formatters.userMention(user.id),
+			footer: { text: `USER ID: ${user.id}` },
+		})
+
+		resultEmbed.addField(
+			"Discord join date",
+			this.formattedJoinDate(user.createdAt)
+		)
 
 		if (message.guild) {
-			const member = await this.getMemberFromMessage(message)
+			const member = await message.guild.members.fetch(user.id)
 
-			if (member) {
-				resultEmbed.addField(
-					"Server join date",
-					this.formattedJoinDate(member.joinedAt)
-				)
+			resultEmbed.addField(
+				"Server join date",
+				this.formattedJoinDate(member.joinedAt)
+			)
 
-				resultEmbed.addField(
-					"Last message sent",
-					"date or this member did not send any message yet."
-				)
-
-				resultEmbed.addField(
-					"Permissions",
-					this.getPermissionsString(member.permissions)
-				)
-
-				const roleMentions = this.getMemberRoles(member, message.guild.id)
-				resultEmbed.addField(
-					`Roles (${roleMentions.length})`,
-					roleMentions.join(" ")
-				)
-			}
+			const roleMentions = this.getMemberRoles(member, message.guild.id)
+			resultEmbed.addField(
+				`Roles (${roleMentions.length})`,
+				roleMentions.join(" ")
+			)
 		}
 
 		message.channel.send({
@@ -85,20 +73,6 @@ Get someone else's user info with user id
 		}
 
 		return result
-	}
-
-	async getMemberFromMessage(message: Message): Promise<GuildMember | null> {
-		const guild = message.guild
-		if (!guild) return null
-
-		return await guild.members.fetch(message.author.id).catch(() => null)
-	}
-
-	getPermissionsString(permissions: Permissions) {
-		return [...Object.entries(permissions.serialize())]
-			.filter((elem) => elem[1])
-			.map((elem) => this.convertCase(elem[0]))
-			.join(", ")
 	}
 
 	getMemberRoles(member: GuildMember, guildID: string): string[] {
