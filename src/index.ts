@@ -37,6 +37,11 @@ const client = new SapphireClient({
 	caseInsensitivePrefixes: true,
 	defaultPrefix: process.env.PREFIX,
 	intents: ["GUILDS", "GUILD_MESSAGES"],
+	defaultCooldown: {
+		delay: 1_000,
+		filteredUsers: process.env.OWNER_IDS.split(","),
+		limit: 5,
+	},
 })
 
 //
