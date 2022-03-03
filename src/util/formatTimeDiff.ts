@@ -1,3 +1,8 @@
+const SECONDS_IN_A_YEAR = 60 * 60 * 24 * 365
+const SECONDS_IN_A_DAY = 60 * 60 * 24
+const SECONDS_IN_A_HOUR = 60 * 60
+const SECONDS_IN_A_MINUTE = 60
+
 /**
  * Formats difference in time in a readable format.
  *
@@ -5,30 +10,34 @@
  * @param {number} endTime - End date in millisecond
  */
 export default function (startTime: number, endTime: number): string {
-	// https://stackoverflow.com/a/13904120/12979111
+	let result = ""
+
+	function addToResult(num: number, unit: string) {
+		if (num) result += ` ${num} ${unit}` + (num > 1 ? "s" : "")
+	}
 
 	let diffSec = (endTime - startTime) / 1000
 
-	const years = Math.floor(diffSec / (60 * 60 * 24 * 365))
-	diffSec -= years * 60 * 60 * 24 * 365
+	// prevent empty response
+	if (diffSec === 0) return "0 second"
 
-	const days = Math.floor(diffSec / (60 * 60 * 24))
-	diffSec -= days * 60 * 60 * 24
+	const years = Math.floor(diffSec / SECONDS_IN_A_YEAR)
+	diffSec -= years * SECONDS_IN_A_YEAR
+	addToResult(years, "year")
 
-	const hrs = Math.floor(diffSec / (60 * 60)) % 24
-	diffSec -= hrs * 60 * 60
+	const days = Math.floor(diffSec / SECONDS_IN_A_DAY)
+	diffSec -= days * SECONDS_IN_A_DAY
+	addToResult(days, "day")
 
-	const mins = Math.floor(diffSec / 60) % 60
-	diffSec -= mins * 60
+	const hours = Math.floor(diffSec / SECONDS_IN_A_HOUR) % 24
+	diffSec -= hours * SECONDS_IN_A_HOUR
+	addToResult(hours, "hour")
 
-	// in theory the modulus is not required
-	const secs = Math.round(diffSec % 60)
+	const minutes = Math.floor(diffSec / SECONDS_IN_A_MINUTE) % 60
+	diffSec -= minutes * SECONDS_IN_A_MINUTE
+	addToResult(minutes, "minute")
 
-	return (
-		(years ? `${years} years ` : "") +
-		(days ? `${days} days ` : "") +
-		(hrs ? `${hrs} hours ` : "") +
-		(mins ? `${mins} minutes ` : "") +
-		(secs ? `${secs} seconds` : "")
-	)
+	addToResult(diffSec, "second")
+
+	return result.trim()
 }
