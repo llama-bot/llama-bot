@@ -14,4 +14,11 @@ test("Accurately counts days between dates", () => {
 			new Date("2022/03/01").getTime()
 		)
 	).toStrictEqual(28)
+
+	expect(
+		countDays(
+			new Date("this string").getTime(), // NaN
+			new Date("is not a valid date").getTime() // NaN
+		)
+	).toStrictEqual(NaN)
 })
