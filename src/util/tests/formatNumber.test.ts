@@ -1,6 +1,6 @@
 import formatNumber from "../formatNumber"
 
-test("Accurately counts days between dates", () => {
+test("Correctly formats numbers", () => {
 	expect(formatNumber(1_000)).toStrictEqual("1,000")
 	expect(formatNumber(999_999_999)).toStrictEqual("999,999,999")
 	expect(formatNumber(0)).toStrictEqual("0")

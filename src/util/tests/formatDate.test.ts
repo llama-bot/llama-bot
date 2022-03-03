@@ -1,6 +1,6 @@
 import formatDate from "../formatDate"
 
-test("Does not contain any lowercase characters", () => {
+test("Properly formats date", () => {
 	expect(formatDate(new Date("Feb 22, 2022 22:22:22"))).toStrictEqual(
 		"2022-2-22 22:22:22"
 	)

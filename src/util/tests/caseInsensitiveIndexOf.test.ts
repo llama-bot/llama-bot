@@ -1,6 +1,6 @@
 import caseInsensitiveIndexOf from "../caseInsensitiveIndexOf"
 
-test("correctly identifies index", () => {
+test("Correctly identifies index", () => {
 	const array = ["A", "B", "C", "D"]
 
 	array.map((entry, index) => {
