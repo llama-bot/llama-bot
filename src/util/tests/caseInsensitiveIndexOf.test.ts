@@ -12,4 +12,6 @@ test("correctly identifies index", () => {
 	expect(
 		caseInsensitiveIndexOf(array, "this does not exist in the array")
 	).toStrictEqual(-1)
+
+	expect(caseInsensitiveIndexOf([], "testing empty array")).toStrictEqual(-1)
 })
