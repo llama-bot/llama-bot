@@ -1,5 +1,5 @@
 /**
- * Add comma to a long number.
+ * Add comma to a long number. Does not add comma to negative numbers.
  *
  * @param {number} num - raw number
  */
