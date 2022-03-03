@@ -2,7 +2,7 @@ import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 
-import { countDays, formatDate, timeDiff } from "../../util"
+import { countDays, formatDate, formatTimeDiff } from "../../util"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["s"],
@@ -45,7 +45,7 @@ export default class SnowflakeCommand extends Command {
 							},
 							{
 								name: "Age",
-								value: timeDiff(creationDate.getTime(), now),
+								value: formatTimeDiff(creationDate.getTime(), now),
 							},
 						],
 					}),

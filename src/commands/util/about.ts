@@ -2,7 +2,7 @@ import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
 
-import { countDays, formatDate, timeDiff } from "../../util"
+import { countDays, formatDate, formatTimeDiff } from "../../util"
 import { globalObject } from "../.."
 
 @ApplyOptions<CommandOptions>({
@@ -19,7 +19,7 @@ export default class AboutCommand extends Command {
 		if (!startTime || !this.container.client.id)
 			return this.failedToGetStartTime(message)
 
-		const formattedUptime = timeDiff(startTime, now)
+		const formattedUptime = formatTimeDiff(startTime, now)
 		const botCreatedTime = SnowflakeUtil.deconstruct(this.container.client.id)
 		const formattedBotCreationDate = formatDate(botCreatedTime.date)
 		const botAgeInDays = countDays(botCreatedTime.date.getTime(), now)

@@ -4,7 +4,7 @@ import { Args, Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters, GuildMember, Message, MessageEmbed } from "discord.js"
 
-import { formatDate, timeDiff } from "../../util"
+import { formatDate, formatTimeDiff } from "../../util"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["ui"],
@@ -67,7 +67,7 @@ Get someone else's user info with user id
 		let result = "Unknown"
 
 		if (joinedAt) {
-			const xAgo = timeDiff(joinedAt.getTime(), Date.now())
+			const xAgo = formatTimeDiff(joinedAt.getTime(), Date.now())
 
 			result = `${formatDate(joinedAt)}\n${xAgo} ago`
 		}

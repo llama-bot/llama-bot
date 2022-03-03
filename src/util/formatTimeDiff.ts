@@ -1,3 +1,9 @@
+/**
+ * Formats difference in time.
+ *
+ * @param {number} startTime - Start date in millisecond
+ * @param {number} endTime - End date in millisecond
+ */
 export default function (startTime: number, endTime: number): string {
 	// https://stackoverflow.com/a/13904120/12979111
 

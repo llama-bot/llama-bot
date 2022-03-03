@@ -8,7 +8,12 @@ import {
 import { Command, CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
 
-import { formatDate, timeDiff, highlightIndex, formatNumber } from "../../util"
+import {
+	formatDate,
+	formatTimeDiff,
+	highlightIndex,
+	formatNumber,
+} from "../../util"
 
 interface Data {
 	// general info
@@ -123,7 +128,7 @@ export default class ServerInfoCommand extends Command {
 
 		const serverCreatedTime = SnowflakeUtil.deconstruct(guild.id)
 		const guildCreationDate = formatDate(serverCreatedTime.date)
-		const guildAge = timeDiff(
+		const guildAge = formatTimeDiff(
 			serverCreatedTime.date.getTime(),
 			message.editedTimestamp || message.createdTimestamp
 		)
