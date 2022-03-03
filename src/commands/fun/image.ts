@@ -5,7 +5,7 @@ import NekoClient from "nekos.life"
 
 import { FunctionKeys, $PropertyType } from "utility-types"
 
-import { isChannelNSFW, caseInsensitiveIndexOf } from "../../util"
+import { isChannelInMessageNSFW, caseInsensitiveIndexOf } from "../../util"
 import { globalObject } from "../.."
 
 type nsfwOptionsType = FunctionKeys<$PropertyType<NekoClient, "nsfw">>
@@ -103,7 +103,7 @@ Show an image of a puppy:
 		//
 
 		// todo: handle server-wide NSFW settings
-		if (option1 === "nsfw" && !isChannelNSFW(message)) {
+		if (option1 === "nsfw" && !isChannelInMessageNSFW(message)) {
 			message.channel.send({
 				embeds: [
 					new MessageEmbed({
