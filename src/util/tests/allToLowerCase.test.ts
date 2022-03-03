@@ -1,6 +1,6 @@
 import allToLowerCase from "../allToLowerCase"
 
-test("lower case function does not ", () => {
+test("Does not contain any lowercase characters", () => {
 	expect(
 		allToLowerCase(["ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"])
 	).toStrictEqual(["abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz"])
