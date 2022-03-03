@@ -1,8 +1,15 @@
 import caseInsensitiveIndexOf from "../caseInsensitiveIndexOf"
 
-test("Does not contain any lowercase characters", () => {
-	expect(caseInsensitiveIndexOf(["A", "B", "C", "D"], "a")).toStrictEqual(0)
-	expect(caseInsensitiveIndexOf(["A", "B", "C", "D"], "b")).toStrictEqual(1)
-	expect(caseInsensitiveIndexOf(["A", "B", "C", "D"], "c")).toStrictEqual(2)
-	expect(caseInsensitiveIndexOf(["A", "B", "C", "D"], "d")).toStrictEqual(3)
+test("correctly identifies index", () => {
+	const array = ["A", "B", "C", "D"]
+
+	array.map((entry, index) => {
+		expect(caseInsensitiveIndexOf(array, entry.toLowerCase())).toStrictEqual(
+			index
+		)
+	})
+
+	expect(
+		caseInsensitiveIndexOf(array, "this does not exist in the array")
+	).toStrictEqual(-1)
 })
