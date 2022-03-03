@@ -1,6 +1,6 @@
 import countDays from "../countDays"
 
-test("Does not contain any lowercase characters", () => {
+test("Accurately counts days between dates", () => {
 	expect(
 		countDays(
 			new Date("2022/02/22").getTime(),
