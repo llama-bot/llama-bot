@@ -98,25 +98,25 @@ export default class ServerInfoCommand extends Command {
 		const maxMembers = guild.maximumMembers
 
 		const communityStatus = highlightIndex(
-			guild.features.includes("COMMUNITY") ? 0 : 1,
-			["Yes", "No"]
+			["Yes", "No"],
+			guild.features.includes("COMMUNITY") ? 0 : 1
 		)
 		const partneredStatus = highlightIndex(
-			guild.features.includes("PARTNERED") ? 0 : 1,
-			["Yes", "No"]
+			["Yes", "No"],
+			guild.features.includes("PARTNERED") ? 0 : 1
 		)
 		const verifiedStatus = highlightIndex(
-			guild.features.includes("VERIFIED") ? 0 : 1,
-			["Yes", "No"]
+			["Yes", "No"],
+			guild.features.includes("VERIFIED") ? 0 : 1
 		)
 
 		const ScanningStatus = highlightIndex(
-			this.explicitContentFilterLevels.indexOf(guild.explicitContentFilter),
-			this.explicitContentFilterLevels
+			this.explicitContentFilterLevels,
+			this.explicitContentFilterLevels.indexOf(guild.explicitContentFilter)
 		)
 		const verificationStatus = highlightIndex(
-			this.verificationLevels.indexOf(guild.verificationLevel),
-			this.verificationLevels
+			this.verificationLevels,
+			this.verificationLevels.indexOf(guild.verificationLevel)
 		)
 
 		const nitroBoosts = guild.premiumSubscriptionCount || 0
