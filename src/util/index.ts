@@ -1,4 +1,3 @@
-export { default as allToLowerCase } from "./allToLowerCase"
 export { default as caseInsensitiveIndexOf } from "./caseInsensitiveIndexOf"
 export { default as countDays } from "./countDays"
 export { default as formatDate } from "./formatDate"
