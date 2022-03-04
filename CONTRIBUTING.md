@@ -78,6 +78,7 @@ The first line should be no more than 50 characters and the rest no more than 72
 - one export per command
   - functions should be `static` whenever possible
 - Keep the `messageRun` function clean (ideally less than 50 lines).
+- Separate regular imports from type imports.
 - Separate the embedded message building process to a separate function.
 
   This also makes testing easier
