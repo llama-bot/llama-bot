@@ -43,9 +43,13 @@ e.g.
 				new MessageEmbed({
 					description: `**${Formatters.userMention(message.author.id)} says:**
 
-${inputs.join("👏")}`,
+${ClapifyCommand.clapify(inputs)}`,
 				}),
 			],
 		})
+	}
+
+	static clapify(inputs: string[]): string {
+		return inputs.join("👏")
 	}
 }
