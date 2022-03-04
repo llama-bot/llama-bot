@@ -1,24 +1,15 @@
 import { ApplyOptions } from "@sapphire/decorators"
-import {
-	Events,
-	Listener,
-	ListenerOptions,
-	Piece,
-	PieceContext,
-	Store,
-} from "@sapphire/framework"
+import { Listener } from "@sapphire/framework"
 import { gray, yellow } from "colorette"
+
+import type { ListenerOptions, Piece, Store } from "@sapphire/framework"
 
 import { globalObject } from ".."
 
 @ApplyOptions<ListenerOptions>({
 	once: true,
 })
-export class Ready extends Listener<typeof Events.ClientReady> {
-	constructor(context: PieceContext) {
-		super(context, { once: true })
-	}
-
+export class Ready extends Listener {
 	public run(): void {
 		globalObject.startTime = Date.now()
 
