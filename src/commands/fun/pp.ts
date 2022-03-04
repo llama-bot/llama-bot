@@ -1,6 +1,16 @@
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { Command } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Formatters, Message, MessageEmbed } from "discord.js"
+import { Formatters } from "discord.js"
+
+import type { Args, CommandOptions } from "@sapphire/framework"
+import type { Message } from "discord.js"
+
+import { sendEmbeddedMessage } from "../../util"
+
+interface PPUser {
+	id: string
+	length: number
+}
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["penis"],
@@ -28,32 +38,37 @@ Measure multiple people's pp:
 `
 
 	async messageRun(message: Message, args: Args) {
-		let membersRaw = await args.repeat("string").catch(() => [])
+		let membersRaw: string[] = await args.repeat("string").catch(() => [])
 
-		//
 		//  handle 0 argument case
-		//
-
 		if (membersRaw.length <= 0) {
 			if (!message.member) {
-				message.channel.send({
-					embeds: [
-						new MessageEmbed()
-							.setTitle("Error")
-							.setDescription("Failed to get user"),
-					],
+				sendEmbeddedMessage(message.channel, {
+					title: "Error",
+					description: "Failed to get user",
 				})
+
 				return
 			}
 
 			membersRaw = [message.author.id]
 		}
 
-		//
-		// Calculate pp lengths
-		//
+		const users = PPCommand.calculatePPLengths(membersRaw)
+		sendEmbeddedMessage(message.channel, {
+			title: "pp",
+			description: PPCommand.buildPPList(users),
+		})
+	}
 
-		const users: { id: string; length: number }[] = []
+	/**
+	 * Calculates pp lengths for a list of people.
+	 *
+	 * @param membersRaw - A list of discord snowflakes to convert to pp length.
+	 * @returns A sorted array of users from lowest to highest.
+	 */
+	static calculatePPLengths(membersRaw: string[]): PPUser[] {
+		const users: PPUser[] = []
 
 		for (const memberRaw of membersRaw) {
 			const numbersInString = memberRaw.match(/\d+/)
@@ -66,7 +81,7 @@ Measure multiple people's pp:
 			try {
 				users.push({
 					id: memberIDStr,
-					length: this.calculatePPLength(memberID),
+					length: memberID % 31 /* Calculation happens here */,
 				})
 			} catch (e) {
 				continue
@@ -76,39 +91,24 @@ Measure multiple people's pp:
 		// sort users ascending by pp length
 		users.sort((prev, curr) => curr.length - prev.length)
 
-		//
-		// construct description
-		//
+		return users
+	}
 
-		let description = ""
+	/**
+	 * Builds the final text that will be shown to the user.
+	 *
+	 * @param users - A list of user and their pp size.
+	 */
+	static buildPPList(users: PPUser[]): string {
+		let ppList = ""
 
 		for (const user of users) {
 			const userMention = Formatters.userMention(user.id)
 
-			description += `${userMention}:\n`
-			description += `8${"=".repeat(user.length)}D **(${user.length})**\n`
+			ppList += `${userMention}:\n`
+			ppList += `8${"=".repeat(user.length)}D **(${user.length})**\n`
 		}
 
-		//
-		// Reply
-		//
-
-		message.channel.send({
-			embeds: [
-				new MessageEmbed({
-					title: "pp",
-					description,
-				}),
-			],
-		})
-	}
-
-	/**
-	 * Convert snowflake to pp length
-	 *
-	 * @param {number} snowflake - Discord snowflake
-	 */
-	calculatePPLength(snowflake: number): number {
-		return snowflake % 31
+		return ppList
 	}
 }
