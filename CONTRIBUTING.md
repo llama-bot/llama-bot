@@ -88,37 +88,40 @@ The first line should be no more than 50 characters and the rest no more than 72
 
     They should be included in the function instead.
 
-    Do this:
+  - not include a dash (`-`) in the `@returns` tag.
 
-    ```ts
-    /**
-     * This function does something.
-     *
-     * - Here's some extra information
-     *
-     * @param argument - This is an argument.
-     */
-    function someFunction(argument: string): string {
-    	const someString = "some string"
+  Do this:
 
-    	return someString
-    }
-    ```
+  ```ts
+  /**
+   * This function does something.
+   *
+   * - Here's some extra information
+   *
+   * @param argument - This is an argument.
+   * @returns some string.
+   */
+  function someFunction(argument: string): string {
+  	const someString = "some string"
 
-    Not this:
+  	return someString
+  }
+  ```
 
-    ```ts
-    /**
-     * This function does something.
-     *
-     * - Here's some extra information
-     *
-     * @param {string} argument - This is an argument.
-     * @returns {string} some string.
-     */
-    function someFunction(argument) {
-    	const someString = "some string"
+  Not this:
 
-    	return someString
-    }
-    ```
+  ```ts
+  /**
+   * This function does something.
+   *
+   * - Here's some extra information
+   *
+   * @param {string} argument - This is an argument.
+   * @returns {string}  - some string.
+   */
+  function someFunction(argument) {
+  	const someString = "some string"
+
+  	return someString
+  }
+  ```
