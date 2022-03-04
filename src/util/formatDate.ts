@@ -1,7 +1,7 @@
 /**
  * Formats {@link date} to `YYYY-MM-DD hh:mm:ss`.
  *
- * @param {Date} date - Raw date object
+ * @param date - Raw date object
  */
 export default function (date: Date): string {
 	const YYYY = date.getFullYear()

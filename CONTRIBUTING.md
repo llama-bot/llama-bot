@@ -81,3 +81,44 @@ The first line should be no more than 50 characters and the rest no more than 72
 - Separate the embedded message building process to a separate function.
 
   This also makes testing easier
+
+- jsdoc comments should...
+
+  - not include argument and return types.
+
+    They should be included in the function instead.
+
+    Do this:
+
+    ```ts
+    /**
+     * This function does something.
+     *
+     * - Here's some extra information
+     *
+     * @param argument - This is an argument.
+     */
+    function someFunction(argument: string): string {
+    	const someString = "some string"
+
+    	return someString
+    }
+    ```
+
+    Not this:
+
+    ```ts
+    /**
+     * This function does something.
+     *
+     * - Here's some extra information
+     *
+     * @param {string} argument - This is an argument.
+     * @returns {string} some string.
+     */
+    function someFunction(argument) {
+    	const someString = "some string"
+
+    	return someString
+    }
+    ```

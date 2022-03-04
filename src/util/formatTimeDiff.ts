@@ -6,8 +6,8 @@ const SECONDS_IN_A_MINUTE = 60
 /**
  * Formats difference in time in a readable format.
  *
- * @param {number} startTime - Start date in millisecond
- * @param {number} endTime - End date in millisecond
+ * @param startTime - Start date in millisecond
+ * @param endTime - End date in millisecond
  */
 export default function (startTime: number, endTime: number): string {
 	let result = ""
