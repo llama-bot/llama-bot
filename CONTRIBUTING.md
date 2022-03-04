@@ -16,7 +16,6 @@
   - [Creating / updating a command](#creating--updating-a-command)
     - [Help message](#help-message)
     - [Structure](#structure)
-    - [Testing edge cases](#testing-edge-cases)
 
 ## Purpose
 
@@ -76,9 +75,9 @@ The first line should be no more than 50 characters and the rest no more than 72
 
 ### Structure
 
+- one export per command
+  - functions should be `static` whenever possible
 - Keep the `messageRun` function clean (ideally less than 50 lines).
 - Separate the embedded message building process to a separate function.
 
   This also makes testing easier
-
-### Testing edge cases
