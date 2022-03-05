@@ -5,7 +5,7 @@ import type { CommandErrorPayload } from "@sapphire/framework"
 /**
  * Gets executed when the bot encounters an error.
  */
-export class Ready extends Listener {
+export class CommandError extends Listener {
 	run(_error: unknown, payload: CommandErrorPayload) {
 		this.logToConsole(payload)
 		this.logToChannels(payload)
