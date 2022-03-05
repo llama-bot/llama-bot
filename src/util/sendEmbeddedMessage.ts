@@ -1,7 +1,9 @@
 import { MessageEmbed } from "discord.js"
+
 import type {
-	MessageEmbedOptions,
 	BaseGuildTextChannel,
+	Message,
+	MessageEmbedOptions,
 	TextBasedChannel,
 } from "discord.js"
 
@@ -14,8 +16,8 @@ import type {
 export default function (
 	channel: BaseGuildTextChannel | TextBasedChannel,
 	data: MessageEmbed | MessageEmbedOptions
-) {
-	channel.send({
+): Promise<Message<boolean>> {
+	return channel.send({
 		embeds: [new MessageEmbed(data)],
 	})
 }
