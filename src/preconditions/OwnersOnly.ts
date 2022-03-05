@@ -16,7 +16,7 @@ export default class OwnersOnlyPrecondition extends Precondition {
 			this.owners = process.env.OWNER_IDS.split(",").filter((elem) => elem)
 		}
 
-		if (!this.owners.includes(message.author.id)) {
+		if (this.owners.includes(message.author.id)) {
 			return this.ok()
 		}
 
