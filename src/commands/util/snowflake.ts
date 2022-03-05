@@ -1,14 +1,17 @@
-import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { SnowflakeUtil, MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
 
+import type { Message } from "discord.js"
+import type { Args, CommandOptions } from "@sapphire/framework"
+
 import { countDays, formatDate, formatTimeDiff } from "../../util"
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["s"],
 	description: "Calculates when a discord ID (snowflake) was created.",
 })
-export default class SnowflakeCommand extends Command {
+export default class SnowflakeCommand extends CustomCommand {
 	usage = "> {$} <discord snowflake>"
 
 	async messageRun(message: Message, args: Args) {

@@ -1,14 +1,18 @@
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { Formatters, MessageEmbed } from "discord.js"
+import { CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Formatters, Message, MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
+import type { Args } from "@sapphire/framework"
 
 import { globalObject } from "../.."
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["owoify"],
 	description: "OwOifies youw message OwO",
 })
-export default class CatCommand extends Command {
+export default class CatCommand extends CustomCommand {
 	usage = "> {$} [message to owoify]"
 
 	async messageRun(message: Message, args: Args) {

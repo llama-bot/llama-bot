@@ -1,14 +1,18 @@
 // todo: also prevent command from having same name as command category
 
-import { Message, MessageEmbed } from "discord.js"
-import {
+import { MessageEmbed } from "discord.js"
+import { ApplyOptions } from "@sapphire/decorators"
+import stringSimilarity from "string-similarity"
+
+import type { Message } from "discord.js"
+import type {
 	Args,
 	Command,
 	CommandOptions,
 	CommandStore,
 } from "@sapphire/framework"
-import { ApplyOptions } from "@sapphire/decorators"
-import stringSimilarity from "string-similarity"
+
+import CustomCommand from "../../custom/CustomCommand"
 
 enum QueryType {
 	empty = "empty",
@@ -28,7 +32,7 @@ type CategorizeQueryReturn =
 	description:
 		"Shows list of helpful information about a command or a command category.",
 })
-export default class HelpCommand extends Command {
+export default class HelpCommand extends CustomCommand {
 	usage = `> {$} ["command"|"category"]
 
 ex:

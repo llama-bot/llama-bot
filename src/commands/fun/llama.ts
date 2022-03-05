@@ -1,14 +1,17 @@
-import { Command, CommandOptions } from "@sapphire/framework"
+import { CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message, MessageEmbed } from "discord.js"
+import { MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
 
 import { settings, fetchSettings } from "../../DB"
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["l", "llamaQuote", "llamaQuotes", "lq"],
 	description: "Shows a random llama quote.",
 })
-export default class LlamaCommand extends Command {
+export default class LlamaCommand extends CustomCommand {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {

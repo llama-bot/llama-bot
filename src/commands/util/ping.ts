@@ -1,13 +1,17 @@
-import { Command, CommandOptions } from "@sapphire/framework"
+import { MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message, MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
+import type { CommandOptions } from "@sapphire/framework"
+
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["p", "pong", "latency"],
 	description:
 		"Measures communication delay (latency) in 1/1000 of a second, also known as millisecond (ms).",
 })
-export default class PingCommand extends Command {
+export default class PingCommand extends CustomCommand {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {

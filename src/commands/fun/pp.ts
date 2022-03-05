@@ -1,11 +1,11 @@
-import { Command } from "@sapphire/framework"
-import { ApplyOptions } from "@sapphire/decorators"
 import { Formatters } from "discord.js"
+import { ApplyOptions } from "@sapphire/decorators"
 
-import type { Args, CommandOptions } from "@sapphire/framework"
 import type { Message } from "discord.js"
+import type { Args, CommandOptions } from "@sapphire/framework"
 
 import { sendEmbeddedMessage } from "../../util"
+import CustomCommand from "../../custom/CustomCommand"
 
 interface PPUser {
 	id: string
@@ -23,7 +23,7 @@ Longest length (30):
 
 This is 101% accurate.`,
 })
-export default class PPCommand extends Command {
+export default class PPCommand extends CustomCommand {
 	usage = `> {$} [user]*
 
 e.g.

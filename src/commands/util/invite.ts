@@ -1,11 +1,15 @@
-import { Command, CommandOptions } from "@sapphire/framework"
+import { CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Message, MessageEmbed } from "discord.js"
+import { MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
+
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	description: "Shows information about inviting the bot.",
 })
-export default class InviteCommand extends Command {
+export default class InviteCommand extends CustomCommand {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {

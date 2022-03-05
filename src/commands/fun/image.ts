@@ -1,12 +1,15 @@
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Formatters, Message, MessageEmbed } from "discord.js"
-import NekoClient from "nekos.life"
+import { Formatters, MessageEmbed } from "discord.js"
 
-import { FunctionKeys, $PropertyType } from "utility-types"
+import type NekoClient from "nekos.life"
+import type { FunctionKeys, $PropertyType } from "utility-types"
+import type { Message } from "discord.js"
+import type { Args } from "@sapphire/framework"
 
 import { isChannelInMessageNSFW, caseInsensitiveIndexOf } from "../../util"
 import { globalObject } from "../.."
+import CustomCommand from "../../custom/CustomCommand"
 
 type nsfwOptionsType = FunctionKeys<$PropertyType<NekoClient, "nsfw">>
 type sfwOptionsType = Exclude<
@@ -30,7 +33,7 @@ const sfwOptions: sfwOptionsType[] = Object.getOwnPropertyNames(
 	aliases: ["i", "img", "images"],
 	description: "Shows some good images",
 })
-export default class ImageCommand extends Command {
+export default class ImageCommand extends CustomCommand {
 	usage = `> {$} [<"nsfw"|"sfw"|"list"|"help"> <image type>]
 
 e.g.

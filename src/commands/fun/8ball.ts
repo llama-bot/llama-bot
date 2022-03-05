@@ -1,15 +1,18 @@
-import { Message, MessageEmbed } from "discord.js"
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
 
+import type { Message } from "discord.js"
+import type { Args, CommandOptions } from "@sapphire/framework"
+
 import { globalObject } from "../.."
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["8", "ball"],
 	description:
 		"Gives you the best advice you can get. We are not responsible for your action though.",
 })
-export default class EightBallCommand extends Command {
+export default class EightBallCommand extends CustomCommand {
 	usage = `> {$} [your question]
 
 e.g.

@@ -1,13 +1,17 @@
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { Formatters, MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Formatters, Message, MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
+import type { Args, CommandOptions } from "@sapphire/framework"
+
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["c", "clap"],
 	description:
 		"Does the annoying Karen clap.👏Does👏not👏work👏with👏external👏emojis.",
 })
-export default class ClapifyCommand extends Command {
+export default class ClapifyCommand extends CustomCommand {
 	usage = `> {$} [message to clapify]
 
 e.g.

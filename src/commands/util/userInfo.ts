@@ -1,16 +1,20 @@
 // todo: nitro boost
 
-import { Args, Command, CommandOptions } from "@sapphire/framework"
+import { Formatters, MessageEmbed } from "discord.js"
+import { CommandOptions } from "@sapphire/framework"
 import { ApplyOptions } from "@sapphire/decorators"
-import { Formatters, GuildMember, Message, MessageEmbed } from "discord.js"
+
+import type { GuildMember, Message } from "discord.js"
+import type { Args } from "@sapphire/framework"
 
 import { formatDate, formatTimeDiff } from "../../util"
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["ui"],
 	description: "Shows information about a user.",
 })
-export default class UserInfoCommand extends Command {
+export default class UserInfoCommand extends CustomCommand {
 	usage = `> {$} [user]
 
 e.g.

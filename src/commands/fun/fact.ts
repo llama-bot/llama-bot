@@ -1,14 +1,17 @@
-import { Message, MessageEmbed } from "discord.js"
-import { Command, CommandOptions } from "@sapphire/framework"
+import { MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
 
+import type { Message } from "discord.js"
+import type { CommandOptions } from "@sapphire/framework"
+
 import { globalObject } from "../.."
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["f", "facts"],
 	description: "Shows useless facts.",
 })
-export default class FactCommand extends Command {
+export default class FactCommand extends CustomCommand {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {

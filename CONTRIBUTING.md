@@ -69,6 +69,8 @@ The first line should be no more than 50 characters and the rest no more than 72
 
 ## Creating / updating a command
 
+Use the `CustomCommand` defined in [src/custom/CustomCommand.ts](./src/custom/CustomCommand.ts) instead of importing from `@sapphire/framework`.
+
 ### Help message
 
 - consistent usage information

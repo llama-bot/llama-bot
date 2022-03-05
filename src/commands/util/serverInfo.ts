@@ -1,12 +1,8 @@
-import {
-	Formatters,
-	Guild,
-	Message,
-	MessageEmbed,
-	SnowflakeUtil,
-} from "discord.js"
-import { Command, CommandOptions } from "@sapphire/framework"
+import { Formatters, MessageEmbed, SnowflakeUtil } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
+
+import type { Guild, Message } from "discord.js"
+import type { CommandOptions } from "@sapphire/framework"
 
 import {
 	formatDate,
@@ -14,6 +10,7 @@ import {
 	highlightIndex,
 	formatNumber,
 } from "../../util"
+import CustomCommand from "../../custom/CustomCommand"
 
 interface Data {
 	// general info
@@ -47,7 +44,7 @@ interface Data {
 	aliases: ["si"],
 	description: "Show information about the server",
 })
-export default class ServerInfoCommand extends Command {
+export default class ServerInfoCommand extends CustomCommand {
 	usage = "> {$}"
 
 	// value of VerificationLevels from "discord.js/typings/enums"

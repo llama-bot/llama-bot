@@ -1,15 +1,18 @@
-import { Command, CommandOptions } from "@sapphire/framework"
+import { SnowflakeUtil, MessageEmbed } from "discord.js"
 import { ApplyOptions } from "@sapphire/decorators"
-import { SnowflakeUtil, Message, MessageEmbed } from "discord.js"
+
+import type { Message } from "discord.js"
+import type { CommandOptions } from "@sapphire/framework"
 
 import { countDays, formatDate, formatTimeDiff } from "../../util"
 import { globalObject } from "../.."
+import CustomCommand from "../../custom/CustomCommand"
 
 @ApplyOptions<CommandOptions>({
 	aliases: ["a", "u", "uptime"],
 	description: "Shows basic information about the bot.",
 })
-export default class AboutCommand extends Command {
+export default class AboutCommand extends CustomCommand {
 	usage = "> {$}"
 
 	async messageRun(message: Message) {
