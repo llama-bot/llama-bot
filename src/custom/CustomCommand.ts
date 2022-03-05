@@ -7,8 +7,8 @@ export default abstract class CustomCommand extends Command {
 		super(context, {
 			...options,
 
-			// only allow commands to run in servers
-			runIn: ["GUILD_TEXT"],
+			// default preconditions
+			preconditions: ["NoDM", ...(options?.preconditions || [])],
 		})
 	}
 }
