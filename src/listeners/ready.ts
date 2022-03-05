@@ -10,7 +10,7 @@ import { globalObject } from ".."
 	once: true,
 })
 export class Ready extends Listener {
-	public run(): void {
+	run() {
 		globalObject.startTime = Date.now()
 
 		this.printReady()
@@ -18,7 +18,7 @@ export class Ready extends Listener {
 		this.printStoreDebugInformation()
 	}
 
-	private printReady(): void {
+	printReady(): void {
 		// prints: botusername#discriminator (botuserid) is Ready!
 		console.log(
 			gray(
@@ -32,19 +32,19 @@ export class Ready extends Listener {
 		)
 	}
 
-	private printMode(): void {
+	printMode(): void {
 		console.log(
 			gray("Mode:"),
 			yellow(process.env.TESTING === "true" ? "DEVELOPMENT" : "PRODUCTION")
 		)
 	}
 
-	private printStoreDebugInformation(): void {
+	printStoreDebugInformation(): void {
 		for (const store of this.container.client.stores.values())
 			console.log(this.styleStore(store))
 	}
 
-	private styleStore(store: Store<Piece>): string {
+	styleStore(store: Store<Piece>): string {
 		return gray(
 			`Loaded ${yellow(store.size.toString().padEnd(3, " "))} ${store.name}.`
 		)
