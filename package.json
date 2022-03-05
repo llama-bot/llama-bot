@@ -6,7 +6,7 @@
 		"test": "jest",
 		"lint": "eslint .",
 		"clean": "del dist",
-		"build": "yarn lint && yarn clean && tsc"
+		"build": "yarn clean && tsc"
 	},
 	"dependencies": {
 		"@sapphire/decorators": "^4.2.4",
