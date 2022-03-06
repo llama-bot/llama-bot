@@ -36,7 +36,18 @@ const client = new SapphireClient({
 	caseInsensitiveCommands: true,
 	caseInsensitivePrefixes: true,
 	defaultPrefix: process.env.PREFIX,
-	intents: ["GUILDS", "GUILD_MESSAGES"],
+	partials: [
+		// necessary for DM events to work
+		// https://discordjs.guide/popular-topics/partials.html#enabling-partials
+		"CHANNEL",
+	],
+	intents: [
+		"DIRECT_MESSAGE_REACTIONS",
+		"DIRECT_MESSAGE_TYPING",
+		"DIRECT_MESSAGES",
+		"GUILD_MESSAGES",
+		"GUILDS",
+	],
 	defaultCooldown: {
 		delay: 1_000,
 		filteredUsers: process.env.OWNER_IDS.split(","),
