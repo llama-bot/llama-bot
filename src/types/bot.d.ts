@@ -1,5 +1,5 @@
 export interface Settings {
-	clearEmojis?: string[]
+	clear_emojis?: string[]
 	quotes?: string[]
 }
 

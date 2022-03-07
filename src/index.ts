@@ -39,14 +39,23 @@ const client = new SapphireClient({
 	partials: [
 		// necessary for DM events to work
 		// https://discordjs.guide/popular-topics/partials.html#enabling-partials
+
 		"CHANNEL",
+
+		// necessary for reaction detection to work
+
+		"MESSAGE",
+		"REACTION",
+		"USER",
 	],
 	intents: [
 		"DIRECT_MESSAGE_REACTIONS",
 		"DIRECT_MESSAGE_TYPING",
 		"DIRECT_MESSAGES",
+
+		"GUILD_MESSAGE_REACTIONS",
+		"GUILD_MESSAGE_TYPING",
 		"GUILD_MESSAGES",
-		"GUILDS",
 	],
 	defaultCooldown: {
 		delay: 1_000,
