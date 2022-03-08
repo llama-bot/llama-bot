@@ -6,6 +6,7 @@ declare module "@sapphire/framework" {
 	}
 
 	interface Preconditions {
+		AdminsOnly: never
 		OwnersOnly: never
 		NoDM: never
 	}
