@@ -6,6 +6,8 @@ import type { ListenerOptions } from "@sapphire/framework"
 
 import { globalObject } from ".."
 
+const y = yellow
+
 @ApplyOptions<ListenerOptions>({
 	once: true,
 })
@@ -14,40 +16,19 @@ export class Ready extends Listener {
 		globalObject.startTime = Date.now()
 
 		this.printReady()
-		this.printMode()
-		this.printStoreDebugInformation()
 	}
 
 	printReady(): void {
-		// prints: botusername#discriminator (botuserid) is Ready!
-		console.log(
-			`${gray(
-				`${yellow(
-					this.container.client.user?.tag || "unknown bot name"
-				)} (ID: ${yellow(
-					this.container.client.user?.id || "unknown bot ID"
-				)}) is Ready!`
-			)}
-`
-		)
-	}
+		const botTag = this.container.client.user?.tag || "unknown bot tag"
+		const botID = this.container.client.user?.id || "unknown bot ID"
+		const botMode =
+			process.env.TESTING === "true" ? "DEVELOPMENT" : "PRODUCTION"
 
-	printMode(): void {
 		console.log(
-			`${gray("Mode:")}  ${yellow(
-				process.env.TESTING === "true" ? "DEVELOPMENT" : "PRODUCTION"
-			)}`
+			gray(`
+${y(botTag)} (ID: ${y(botID)}) is Ready!
+Mode: ${y(botMode)}
+`)
 		)
-	}
-
-	printStoreDebugInformation(): void {
-		for (const store of this.container.client.stores.values())
-			console.log(
-				gray(
-					`Loaded ${yellow(store.size.toString().padEnd(3, " "))} ${
-						store.name
-					}.`
-				)
-			)
 	}
 }
