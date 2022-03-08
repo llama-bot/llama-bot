@@ -18,7 +18,7 @@ export class MessageCreate extends Listener {
 		// ignore messages from other bots (or even itself)
 		if (message.author.bot) return
 
-		await sendEmbeddedMessage(message.channel, {
+		const responseMessage = await sendEmbeddedMessage(message.channel, {
 			title: "❗ DM commands are not supported.",
 			description: `Add a broom (🧹) emoji to a messages sent by me to delete them.
 This message will deleted in ${this.autoDeleteSeconds} seconds.`,
@@ -29,6 +29,6 @@ This message will deleted in ${this.autoDeleteSeconds} seconds.`,
 			setTimeout(resolve, this.autoDeleteSeconds * 1000)
 		)
 
-		message.delete()
+		responseMessage.delete()
 	}
 }
