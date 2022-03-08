@@ -24,7 +24,6 @@ export class MessageCreate extends Listener {
 This message will deleted in ${this.autoDeleteSeconds} seconds.`,
 		})
 
-		// wait for 5 seconds
 		await new Promise((resolve) =>
 			setTimeout(resolve, this.autoDeleteSeconds * 1000)
 		)
