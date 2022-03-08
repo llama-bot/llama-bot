@@ -18,7 +18,7 @@ export class CommandError extends Listener {
 
 		console.error(`
 ===============[ ERROR ]===============
-Author:  ${author.id} (${author.username}#$${author.discriminator})
+Author:  ${author.id} (${author.tag})
 URL:     ${message.url}
 Content: ${message.content}
 =======================================
