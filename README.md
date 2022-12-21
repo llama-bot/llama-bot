@@ -1,3 +1,3 @@
 # Llama bot
 
-## [Documentation](https://docs.llama.developomp.com/docs/bot/overview)
+moved to https://github.com/developomp/llama-bot
